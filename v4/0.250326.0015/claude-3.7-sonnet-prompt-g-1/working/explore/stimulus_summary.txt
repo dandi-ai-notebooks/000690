@@ -1,0 +1,29 @@
+Stimulus Types:
+- SAC: 8 variants
+- NaturalMovie: 6 variants
+- DOT: 1 variants
+- Disk: 1 variants
+- ROT: 1 variants
+- Ring: 1 variants
+- UD: 1 variants
+
+Stimulus Details:
+- Stim01_SAC_Wd15_Vel2_White_loop_presentations, Type: SAC, Width: 15°, Velocity: 2, Color: White, Pattern: loop
+- Stim02_SAC_Wd45_Vel2_White_loop_presentations, Type: SAC, Width: 45°, Velocity: 2, Color: White, Pattern: loop
+- Stim03_SAC_Wd15_Vel2_White_oneway_1_presentations, Type: SAC, Width: 15°, Velocity: 2, Color: White, Pattern: one-way
+- Stim04_SAC_Wd15_Vel2_Black_loop_presentations, Type: SAC, Width: 15°, Velocity: 2, Color: Black, Pattern: loop
+- Stim05_SAC_Wd15_Vel2_White_oneway_2_presentations, Type: SAC, Width: 15°, Velocity: 2, Color: White, Pattern: one-way
+- Stim06_SAC_Wd15_Vel2_White_scramble_presentations, Type: SAC, Width: 15°, Velocity: 2, Color: White, Pattern: scrambled
+- Stim07_DOT_Wd15_Vel2_White_loop_presentations, Type: DOT, Width: 15°, Velocity: 2, Color: White, Pattern: loop
+- Stim08_SAC_Wd15_Vel6_White_loop_presentations, Type: SAC, Width: 15°, Velocity: 6, Color: White, Pattern: loop
+- Stim09_UD_Wd15_Vel2_White_loop_presentations, Type: UD, Width: 15°, Velocity: 2, Color: White, Pattern: loop
+- Stim10_ROT_Wd15_Vel2_White_loop_presentations, Type: ROT, Width: 15°, Velocity: 2, Color: White, Pattern: loop
+- Stim11_Ring_Wd15_Vel2_White_loop_presentations, Type: Ring, Width: 15°, Velocity: 2, Color: White, Pattern: loop
+- Stim12_Disk_Wd15_Vel2_White_loop_presentations, Type: Disk, Width: 15°, Velocity: 2, Color: White, Pattern: loop
+- Stim13_SAC_Wd15_Vel2_Disco_loop_presentations, Type: SAC, Width: 15°, Velocity: 2, Color: Disco, Pattern: loop
+- Stim14_natmovie_10secFast_EagleSwoop_presentations, Type: NaturalMovie, Natural Movie
+- Stim15_natmovie_20sec_EagleSwoop_presentations, Type: NaturalMovie, Natural Movie
+- Stim16A_natmovie_20sec_Flipped_A_EagleSwoop_presentations, Type: NaturalMovie, Pattern: flipped, Natural Movie
+- Stim16B_natmovie_20sec_Flipped_B_EagleSwoop_presentations, Type: NaturalMovie, Pattern: flipped, Natural Movie
+- Stim17A_natmovie_20sec_Occluded1to1_A_EagleSwoop_presentations, Type: NaturalMovie, Pattern: occluded, Natural Movie
+- Stim17B_natmovie_20sec_Occluded1to1_B_EagleSwoop_presentations, Type: NaturalMovie, Pattern: occluded, Natural Movie

@@ -1,0 +1,4 @@
+dandiset_id: 000690
+model: google/gemini-2.0-flash-001
+prompt: prompt-f-1
+version: 0.250326.0015

@@ -52,26 +52,36 @@ try:
                 if valid_unit_counter >= num_units_to_plot:
                     break
                 
-                # nwb.units.spike_times is a VectorIndex object.
-                # nwb.units.spike_times.data provides access to all concatenated spike times.
-                # nwb.units.spike_times.index provides access to the boundary indices for each unit.
+                # Attempting to use Allen SDK-style spike_times_index if standard VectorIndex access failed.
+                # nwb.units.spike_times is assumed to be the concatenated data.
+                # nwb.units.spike_times_index is assumed to be the boundary indices.
                 
-                # Keep these as HDF5 dataset references or VectorData objects initially
-                all_spike_times_ds = nwb.units.spike_times.data 
-                boundary_indices_ds = nwb.units.spike_times.index
-                
+                try:
+                    # Load all spike times and boundary indices into numpy arrays
+                    # This assumes nwb.units.spike_times might be VectorData or HDF5 dataset
+                    all_spike_times_np = nwb.units.spike_times[:] 
+                    # This assumes nwb.units.spike_times_index is an attribute with boundary data
+                    boundary_indices_np = nwb.units.spike_times_index[:] 
+                except AttributeError as ae:
+                    # This might happen if nwb.units.spike_times is a VectorIndex, then .data would be needed for first part
+                    # or if nwb.units.spike_times_index doesn't exist.
+                    print(f"Initial Attribute error during data/index loading: {ae}")
+                    print("Trying nwb.units.spike_times.data and nwb.units.spike_times.index (standard VectorIndex)")
+                    all_spike_times_np = nwb.units.spike_times.data[:]
+                    boundary_indices_np = nwb.units.spike_times.index[:]
+
+
                 # Get spike times for unit i
+                raw_end_idx_val = boundary_indices_np[i]
                 if i == 0:
                     start_idx = 0
-                    # Load only the needed boundary index
-                    end_idx = boundary_indices_ds[0] 
+                    end_idx = int(raw_end_idx_val) # Ensure scalar integer
                 else:
-                    # Load only the needed boundary indices
-                    start_idx = boundary_indices_ds[i-1]
-                    end_idx = boundary_indices_ds[i]
+                    raw_start_idx_val = boundary_indices_np[i-1]
+                    start_idx = int(raw_start_idx_val) # Ensure scalar integer
+                    end_idx = int(raw_end_idx_val)   # Ensure scalar integer
                 
-                # Slice the data for the current unit
-                current_unit_spike_times = all_spike_times_ds[start_idx:end_idx]
+                current_unit_spike_times = all_spike_times_np[start_idx:end_idx]
 
                 if len(current_unit_spike_times) > 10: # Only consider units with at least 10 spikes
                     selected_unit_indices.append(valid_unit_counter) # This will be y-axis

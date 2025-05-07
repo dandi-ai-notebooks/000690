@@ -1,0 +1,18 @@
+{
+  "dandiset_id": "000690",
+  "version": "0.250326.0015",
+  "model": "deepseek/deepseek-chat-v3-0324",
+  "prompt": "prompt-f-1.txt",
+  "total_prompt_tokens": 139726,
+  "total_completion_tokens": 3721,
+  "total_vision_prompt_tokens": 153,
+  "total_vision_completion_tokens": 121,
+  "elapsed_time_seconds": 326.5773272514343,
+  "timestamp": "2025-05-07 18:19:18",
+  "system_info": {
+    "platform": "Linux-5.10.236-227.928.amzn2.x86_64-x86_64-with-glibc2.39",
+    "hostname": "jupyter-magland",
+    "processor": "x86_64",
+    "python_version": "3.11.10"
+  }
+}

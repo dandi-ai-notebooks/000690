@@ -1,0 +1,7 @@
+- user: magland
+  reason: >
+    The figure "Correlation Between Running Speed and Neural Activity" reports a
+    very high correlation for Unit 9 with a p-value of 0.000. However, it is
+    evident that this is due to a single outlier point.
+
+    Also, the "Neural Response to SAC_Wd15_Vel2_Bndry1" figure doesn't look right.

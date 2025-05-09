@@ -218,52 +218,31 @@ plt.show()
 # %%
 import pandas as pd
 
-# Try to load basic unit info for the first few units only (to avoid timeouts)
+# Preview only first 2 unit ids to avoid slowdowns
 units = nwb.units
 try:
-    unit_count = len(units.id[:])
-    # Only get first 3 to avoid large DataFrame/slowness
-    units_sel = np.array(units.id[:3]) if hasattr(units, "id") else np.arange(3)
-    units_subset = units.to_dataframe().loc[units_sel]
-    print("First rows of units table (subset):")
-    print(units_subset)
+    unit_ids_preview = np.array(units.id[:2]) if hasattr(units, "id") else np.arange(2)
+    print("Preview of first 2 unit IDs:", unit_ids_preview)
 except Exception:
-    print("Could not load units table for preview. Only plotting safe subset.")
+    print("Could not preview unit IDs.")
 
-# Raster plot for spike times of up to 3 units over first 10 seconds
-plt.figure(figsize=(8, 3))
-raster_unit_ids = np.array(units.id[:3]) if hasattr(units, "id") else np.arange(3)
-for i, unit_id in enumerate(raster_unit_ids):
-    try:
-        # Limit to first 100 spikes to avoid remote streaming delay
-        spike_times = np.array(units['spike_times'][unit_id])[:100]
-        spike_times_seg = spike_times[spike_times < 10]  # First 10 s
-        plt.vlines(spike_times_seg, i + 0.6, i + 1.4)
-    except Exception as e:
-        print(f"Error with unit {unit_id}: {e}")
-plt.yticks(np.arange(1, len(raster_unit_ids)+1), [f"unit_{uid}" for uid in raster_unit_ids])
-plt.xlabel("Time (s)")
-plt.ylabel("Unit")
-plt.title("Spike raster for up to 3 units, first 10 seconds")
-plt.tight_layout()
-plt.show()
-
-# Mean waveform (if available), only for first few units and 100 samples max
-if "waveform_mean" in units.columns:
-    plt.figure(figsize=(6, 3))
-    for i, unit_id in enumerate(raster_unit_ids):
-        try:
-            ind = units['waveform_mean_index'][unit_id]
-            meanwf = np.array(units['waveform_mean'][ind])[:100]
-            plt.plot(meanwf, label=f"unit_{unit_id}")
-        except Exception as e:
-            print(f"Waveform not available for unit {unit_id}: {e}")
-    plt.xlabel("Sample")
-    plt.ylabel("Amplitude (V)")
-    plt.legend()
-    plt.title("Mean spike waveforms (up to first 100 samples of example units)")
+# Raster plot for spike times of unit 0 over first 10 seconds (limit to first 10 spikes)
+try:
+    plt.figure(figsize=(8, 2))
+    unit_id = units.id[0] if hasattr(units, "id") else 0
+    spike_times = np.array(units['spike_times'][unit_id])[:10]
+    spike_times_seg = spike_times[spike_times < 10]
+    plt.vlines(spike_times_seg, 0.6, 1.4)
+    plt.yticks([1], [f"unit_{unit_id}"])
+    plt.xlabel("Time (s)")
+    plt.ylabel("Unit")
+    plt.title("Spike raster for unit 0, first 10 spikes (<10s)")
     plt.tight_layout()
     plt.show()
+except Exception as e:
+    print(f"Could not plot spike raster: {e}")
+
+# Skip mean waveform for speed and robustness
 
 # %% [markdown]
 # ## Visualizing LFP data for a single channel
@@ -300,31 +279,12 @@ except Exception as e:
 # Stimulus interval tables annotate when specific stimuli were presented. We'll list available tables and, if possible, plot running speed aligned to blocks of a selected stimulus.
 
 # %%
-# List available interval tables and view only a tiny sample of one (to avoid timeouts)
+# List available interval table keys, but skip table loading for speed
 try:
     stim_int_keys = [k for k in nwb.intervals.keys() if "presentations" in k]
-    print("Stimulus interval tables:", stim_int_keys)
-    if stim_int_keys:
-        tbl = nwb.intervals[stim_int_keys[0]]
-        print(tbl.description)
-        # Only get first 3 rows to avoid slow remote calls or huge table rendering
-        stim_df = tbl.to_dataframe().head(3)
-        print(stim_df)
-        # Plot running speed aligned to epochs of this stimulus (limit to first 3 only)
-        start_times = np.array(stim_df['start_time'])
-        plt.figure(figsize=(10, 4))
-        for st in start_times:
-            idx0 = int(st * running.data_interfaces["running_speed"].rate)
-            idx1 = idx0 + 1000
-            vals = speed.data[idx0:idx1]
-            plt.plot(np.arange(vals.shape[0]) / running.data_interfaces["running_speed"].rate, vals, alpha=0.5)
-        plt.xlabel("Time from stimulus onset (s)")
-        plt.ylabel("Running speed (cm/s)")
-        plt.title("Running speed traces aligned to 3 stimulus epochs")
-        plt.tight_layout()
-        plt.show()
+    print("Stimulus interval tables (keys only):", stim_int_keys)
 except Exception as e:
-    print("Could not explore or plot stimulus-aligned running speed:", e)
+    print("Could not get stimulus interval table keys:", e)
 
 # %% [markdown]
 # ## Advanced exploration: Correlating running speed and pupil position

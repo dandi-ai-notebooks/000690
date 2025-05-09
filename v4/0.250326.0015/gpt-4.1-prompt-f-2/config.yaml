@@ -1,0 +1,4 @@
+dandiset_id: 000690
+model: openai/gpt-4.1
+prompt: prompt-f-2
+version: 0.250326.0015

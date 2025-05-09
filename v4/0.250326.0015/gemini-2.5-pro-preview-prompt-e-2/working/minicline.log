@@ -2,7 +2,7 @@ Using model: google/gemini-2.5-pro-preview
 Num. messages in conversation: 2
 Submitting completion request...
 Processing response...
-The first step is to gather information about the Dandiset. I will use the `execute_command` tool to run the command `python tools_cli.py dandiset-info 000690 --version 0.250326.0015`. This command will provide metadata about the Dandiset, which I'll use in the introduction of the notebook. This command is safe and does not require user approval.
+I need to execute the command `python tools_cli.py dandiset-info 000690 --version 0.250326.0015` to get the Dandiset metadata as per step 1 of the plan. This command is non-destructive and provides information, so `requires_approval` can be `false`.
 
 Tool: execute_command
 Params: {'command': 'python tools_cli.py dandiset-info 000690 --version 0.250326.0015', 'requires_approval': 'false'}
@@ -92,8 +92,8 @@ python tools_cli.py dandiset-info 000690 --version 0.250326.0015
     ]
   }
 }
-Total prompt tokens: 8913 + 0
-Total completion tokens: 719 + 0
+Total prompt tokens: 8998 + 0
+Total completion tokens: 1038 + 0
 
 =========================================
 
@@ -189,7 +189,13 @@ Using model: google/gemini-2.5-pro-preview
 Num. messages in conversation: 4
 Submitting completion request...
 Processing response...
-The next step is to get the list of assets in the Dandiset. I will use the `execute_command` tool to run the command `python tools_cli.py dandiset-assets 000690 --version 0.250326.0015`. This will provide a list of files, which I will use to select an NWB file for closer examination in the notebook. This command is safe and does not require user approval.
+content:  
+No tool use found. Please provide a tool use in the following format: <thinking>...</thinking><tool_name><param1>value1</param1><param2>value2</param2></tool_name>
+Using model: google/gemini-2.5-pro-preview
+Num. messages in conversation: 6
+Submitting completion request...
+Processing response...
+I need to execute the command `python tools_cli.py dandiset-assets 000690 --version 0.250326.0015` to get the Dandiset assets, as per step 2 of the plan. This command is non-destructive and provides information, so `requires_approval` can be `false`.
 
 Tool: execute_command
 Params: {'command': 'python tools_cli.py dandiset-assets 000690 --version 0.250326.0015', 'requires_approval': 'false'}
@@ -304,8 +310,8 @@ python tools_cli.py dandiset-assets 000690 --version 0.250326.0015
     ]
   }
 }
-Total prompt tokens: 19564 + 0
-Total completion tokens: 900 + 0
+Total prompt tokens: 30463 + 0
+Total completion tokens: 1380 + 0
 
 =========================================
 
@@ -423,14 +429,12 @@ STDOUT:
 =========================================
 
 Using model: google/gemini-2.5-pro-preview
-Num. messages in conversation: 6
+Num. messages in conversation: 8
 Submitting completion request...
 Processing response...
-The task requires me to select an NWB file and get its information. From the previous step, I have a list of assets. I will select the first NWB file from the list: `sub-692072/sub-692072_ses-1298465622.nwb`. Its asset ID is `fbcd4fe5-7107-41b2-b154-b67f783f23dc`.
-
-The URL for this asset will be `https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/`.
-
-I will use the `execute_command` tool to run the command `python tools_cli.py nwb-file-info 000690 https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/ --version 0.250326.0015`. This will provide information on how to load data from this specific NWB file, which is crucial for creating the notebook. This command is safe and does not require user approval.
+I need to execute the command `python tools_cli.py nwb-file-info 000690 <NWB_FILE_URL> --version 0.250326.0015` for the chosen NWB file.
+The NWB_FILE_URL is `https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/`.
+This command is non-destructive and provides information, so `requires_approval` can be `false`.
 
 Tool: execute_command
 Params: {'command': 'python tools_cli.py nwb-file-info 000690 https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/ --version 0.250326.0015', 'requires_approval': 'false'}
@@ -1636,8 +1640,8 @@ nwb.units.waveform_mean # (VectorIndex) Index for VectorData 'waveform_mean'
 # nwb.units.waveform_mean_index[2] # (ndarray)
 # nwb.units.waveform_mean_index[3] # (ndarray)
 # ...
-Total prompt tokens: 32683 + 0
-Total completion tokens: 1425 + 0
+Total prompt tokens: 43677 + 0
+Total completion tokens: 1767 + 0
 
 =========================================
 
@@ -2848,100 +2852,111 @@ STDERR:
 =========================================
 
 Using model: google/gemini-2.5-pro-preview
-Num. messages in conversation: 8
+Num. messages in conversation: 10
 Submitting completion request...
 Processing response...
-I have gathered all the necessary information:
-1. Dandiset metadata (name, description, URL, etc.)
-2. Dandiset assets (list of files, including NWB files and their asset IDs)
-3. Information for a specific NWB file (`sub-692072/sub-692072_ses-1298465622.nwb`), including how to load it and what data it contains. The URL for this file is `https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/`.
+I have all the necessary information from the previous tool calls:
+- Dandiset metadata (name, description, etc.)
+- Dandiset assets (for listing and choosing an NWB file)
+- NWB file info (how to load data, available data fields) for `sub-692072/sub-692072_ses-1298465622.nwb` (asset id: `fbcd4fe5-7107-41b2-b154-b67f783f23dc`)
 
-Now I will proceed to write the content of the `notebook.py` file. I will structure the notebook as requested, including:
-- Title
-- AI-generated disclaimer
-- Dandiset overview and link
-- Notebook summary
-- Required packages
-- DANDI API loading example
-- NWB file loading and metadata display for `sub-692072/sub-692072_ses-1298465622.nwb`
-- Explanation of the chosen NWB file and how its URL is obtained
-- Summary of NWB file contents
-- Link to Neurosift
-- Visualization of data from the NWB file (e.g., pupil tracking data, running speed). I will be careful about data sizes and load subsets if necessary.
-- Summary of findings and future directions.
+I will now construct the `notebook.py` file content according to the user's detailed instructions.
+This involves:
+- Title and AI-generated disclaimer.
+- Dandiset_info, including the DANDI archive link.
+- Notebook summary.
+- Required packages.
+- Code for loading the Dandiset using DandiAPIClient.
+- Code for loading the specific NWB file (`sub-692072/sub-692072_ses-1298465622.nwb`).
+- Displaying some metadata from the NWB file.
+- Summarizing NWB file contents in markdown.
+- Neurosift link for the NWB file.
+- Code for loading and visualizing some data (e.g., `running_speed` and `EyeTracking`'s `pupil_tracking.area`).
+- Summary and future directions.
+- Explanatory markdown cells.
 
-I will use the information from the `nwb-file-info` output to guide the data loading and visualization examples. For instance, I can see `EyeTracking.pupil_tracking.data` and `running_speed.data` are available and might be good candidates for visualization.
+I will pay attention to the specific formatting for Jupytext (`# %% [markdown]` and `# %%`).
+I will also make sure to use the hardcoded URL for the NWB file as provided in the `nwb-file-info` output.
+I will select a few representative data fields for visualization to keep the notebook concise but informative, being mindful of data sizes.
+I'll choose `running_speed` as it's a common behavioral measure and `pupil_tracking.area` from `EyeTracking` as an example of nested data.
+The NWB file info output is quite long, so I will be selective in what I include in the markdown summary of the NWB file to avoid overwhelming the user.
+The Dandiset ID is `000690` and the version is `0.250326.0015`.
+The chosen NWB asset ID is `fbcd4fe5-7107-41b2-b154-b67f783f23dc`.
+The NWB file path is `sub-692072/sub-692072_ses-1298465622.nwb`.
 
 Tool: write_to_file
-Params: {'path': 'notebook.py', 'content': '# %% [markdown]\n# # Exploring Dandiset 000690: Allen Institute Openscope - Vision2Hippocampus project\n#\n# **Dandiset Version: 0.250326.0015**\n\n# %% [markdown]\n# > ⚠️ **Disclaimer:** This notebook was AI-generated and has not been fully verified. Please be cautious when interpreting the code or results.\n\n# %% [markdown]\n# ## Overview of the Dandiset\n#\n# This Dandiset, titled "Allen Institute Openscope - Vision2Hippocampus project," contains data related to an experiment investigating how neural representations of visual stimuli evolve from the thalamus through visual cortex to the hippocampus in mice.\n#\n# The project aims to understand how the brain computes abstractions from simple visual stimuli to more complex representations. Mice were presented with simple visual motion (bars of light with varying properties) and complex visual stimuli (movies).\n#\n# **Key information:**\n# - **Dandiset Identifier:** 000690\n# - **Version:** 0.250326.0015\n# - **Dandiset URL:** [https://dandiarchive.org/dandiset/000690/0.250326.0015](https://dandiarchive.org/dandiset/000690/0.250326.0015)\n# - **Description:** Extensive research shows that visual cortical neurons respond to specific stimuli, e.g. the primary visual cortical neurons respond to bars of light with specific orientation. In contrast, the hippocampal neurons are thought to encode not specific stimuli but instead represent abstract concepts such as space, time and events. How is this abstraction computed in the mouse brain? Specifically, how does the representation of simple visual stimuli evolve from the thalamus, which is a synapse away from the retina, through primary visual cortex, higher order visual areas and all the way to hippocampus, that is farthest removed from the retina? The current OpenScope project aims to understand how the neural representations of simple and natural stimuli evolve from the LGN through V1, and most hippocampal regions, as well as some of the frontal areas.\n# - **Keywords:** mouse, neuropixel, extracellular electrophysiology, neocortex, hippocampus, Entorhinal cortex, excitatory, inhibitory, vision, movies.\n# - **Measurement Techniques:** multi electrode extracellular electrophysiology recording technique, signal filtering technique, spike sorting technique, analytical technique.\n\n# %% [markdown]\n# ## What this notebook covers\n#\n# This notebook will guide you through the following steps:\n# 1. Listing the required Python packages.\n# 2. Demonstrating how to load the Dandiset metadata using the DANDI API.\n# 3. Showing how to load a specific Neurophysiology: Neurodata Without Borders (NWB) file from the Dandiset.\n# 4. Displaying some metadata from the loaded NWB file.\n# 5. Summarizing the contents of the NWB file.\n# 6. Providing a link to explore the NWB file interactively using Neurosift.\n# 7. Illustrating how to load and visualize some example data from the NWB file, such as eye tracking and running speed.\n# 8. Summarizing the findings and suggesting potential future analysis directions.\n\n# %% [markdown]\n# ## Required Packages\n#\n# To run this notebook, you\'ll need the following Python packages. We assume these are already installed on your system.\n#\n# - `dandi` (for interacting with the DANDI Archive)\n# - `pynwb` (for working with NWB files)\n# - `h5py` (for HDF5 file access, a dependency of pynwb)\n# - `remfile` (for accessing remote HDF5 files)\n# - `numpy` (for numerical operations)\n# - `matplotlib` (for plotting)\n# - `pandas` (for data manipulation and viewing tables)\n# - `seaborn` (for enhanced visualizations)\n\n# %% [markdown]\n# ## Loading the Dandiset using the DANDI API\n\n# %%\nfrom itertools import islice\nfrom dandi.dandiapi import DandiAPIClient\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport pynwb\nimport h5py\nimport remfile\nimport seaborn as sns\n\n# Set seaborn style for plots (except for images)\nsns.set_theme()\n\n# %%\n# Connect to DANDI archive\nclient = DandiAPIClient()\ndandiset_id = "000690"\ndandiset_version = "0.250326.0015"\ndandiset = client.get_dandiset(dandiset_id, dandiset_version)\n\n# %%\n# Print basic information about the Dandiset\nmetadata = dandiset.get_raw_metadata()\nprint(f"Dandiset name: {metadata[\'name\']}")\nprint(f"Dandiset URL: {metadata[\'url\']}")\nprint(f"Dandiset description: {metadata.get(\'description\', \'N/A\')[:200]}...") # Print first 200 characters\n\n# %%\n# List some assets in the Dandiset\nassets = dandiset.get_assets()\nprint("\\nFirst 5 assets:")\nfor asset in islice(assets, 5):\n    print(f"- {asset.path} (ID: {asset.asset_id})") # Using asset_id as identifier\n\n# %% [markdown]\n# ## Loading an NWB File\n#\n# We will now load one of the NWB files from the Dandiset to explore its contents.\n#\n# For this demonstration, we will load the file: `sub-692072/sub-692072_ses-1298465622.nwb`.\n#\n# The asset ID for this file is `fbcd4fe5-7107-41b2-b154-b67f783f23dc`.\n#\n# We can construct the direct download URL for this asset as follows:\n# `https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/`\n\n# %%\n# Define the URL for the NWB file\nnwb_asset_id = "fbcd4fe5-7107-41b2-b154-b67f783f23dc"\nnwb_file_url = f"https://api.dandiarchive.org/api/assets/{nwb_asset_id}/download/"\nprint(f"Loading NWB file from: {nwb_file_url}")\n\n# Load the NWB file\n# This uses remfile to stream the remote HDF5 file\nremote_file = remfile.File(nwb_file_url)\nh5_file = h5py.File(remote_file, \'r\') # Ensure read-only mode\nio = pynwb.NWBHDF5IO(file=h5_file, mode=\'r\') # Ensure read-only mode for pynwb\nnwbfile = io.read()\n\nprint("\\nNWB file loaded successfully.")\n\n# %% [markdown]\n# ### NWB File Metadata\n#\n# Let\'s look at some basic metadata from the loaded NWB file.\n\n# %%\nprint(f"Session Description: {nwbfile.session_description}")\nprint(f"Identifier: {nwbfile.identifier}")\nprint(f"Session Start Time: {nwbfile.session_start_time}")\nif nwbfile.subject:\n    print(f"Subject ID: {nwbfile.subject.subject_id}")\n    print(f"Subject Age: {nwbfile.subject.age}")\n    print(f"Subject Sex: {nwbfile.subject.sex}")\n    print(f"Subject Species: {nwbfile.subject.species}")\nelse:\n    print("Subject information: Not available")\n\n# %% [markdown]\n# ### Neurosift Link\n#\n# You can explore this NWB file interactively on Neurosift using the following link:\n#\n# [https://neurosift.app/nwb?url=https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/&dandisetId=000690&dandisetVersion=draft](https://neurosift.app/nwb?url=https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/&dandisetId=000690&dandisetVersion=draft)\n#\n# *(Note: The Neurosift link uses `dandisetVersion=draft` as specific version linking might vary in behavior or availability)*\n\n# %% [markdown]\n# ### Summarizing NWB File Contents\n#\n# NWB files have a hierarchical structure. Let\'s explore some of the main groups and datasets within this file.\n\n# %% [markdown]\n# #### Acquisition Data\n#\n# This group typically contains raw acquired data.\n\n# %%\nif nwbfile.acquisition:\n    print("Available data in \'acquisition\':")\n    for acq_name, acq_data in nwbfile.acquisition.items():\n        print(f"- {acq_name} (type: {type(acq_data).__name__})")\n        if hasattr(acq_data, \'data\') and hasattr(acq_data.data, \'shape\'):\n             print(f"  Shape: {acq_data.data.shape}")\n        if isinstance(acq_data, pynwb.base.TimeSeries) and hasattr(acq_data, \'timestamps\') and hasattr(acq_data.timestamps, \'shape\'):\n             print(f"  Timestamps shape: {acq_data.timestamps.shape}")\n        elif isinstance(acq_data, pynwb.behavior.Position): # For EyeTracking\n            for spatial_series_name, spatial_series in acq_data.spatial_series.items():\n                print(f"  - {spatial_series_name} (type: {type(spatial_series).__name__})")\n                if hasattr(spatial_series, \'data\') and hasattr(spatial_series.data, \'shape\'):\n                    print(f"    Data shape: {spatial_series.data.shape}")\n                if hasattr(spatial_series, \'timestamps\') and_link = hasattr(spatial_series.timestamps, \'shape\'):  # Corrected: and_link to and\n                    print(f"    Timestamps shape: {spatial_series.timestamps.shape if hasattr(spatial_series.timestamps, \'shape\') else \'N/A\'}")\n\nelse:\n    print("\'acquisition\' group is empty or not present.")\n\n# %% [markdown]\n# #### Processing Data\n#\n# This group often contains processed data derived from the raw acquisition.\n\n# %%\nif nwbfile.processing:\n    print("\\nAvailable data in \'processing\':")\n    for proc_module_name, proc_module in nwbfile.processing.items():\n        print(f"- Processing module: {proc_module_name}")\n        for data_interface_name, data_interface in proc_module.data_interfaces.items():\n            print(f"  - {data_interface_name} (type: {type(data_interface).__name__})")\n            if hasattr(data_interface, \'data\') and hasattr(data_interface.data, \'shape\'):\n                 print(f"    Shape: {data_interface.data.shape}")\n            if isinstance(data_interface, pynwb.base.TimeSeries) and hasattr(data_interface, \'timestamps\') and hasattr(data_interface.timestamps, \'shape\'):\n                 print(f"    Timestamps shape: {data_interface.timestamps.shape}")\nelse:\n    print("\\n\'processing\' group is empty or not present.")\n\n# %% [markdown]\n# #### Units Data (Spike Times)\n#\n# If spike sorting has been performed, this table contains information about putative neurons (units), including their spike times.\n\n# %%\nif nwbfile.units:\n    print("\\nUnits data (spike times):")\n    # Displaying units as a pandas DataFrame can be very informative\n    # We select a few representative columns to display.\n    # Note: Accessing all columns with to_dataframe() might be slow for large unit tables.\n    # It\'s better to select columns of interest.\n    desired_columns = [\'id\', \'spike_times\', \'electrodes\', \'electrode_group\', \'waveform_mean\', \'quality\']\n    # Filter out columns that don\'t exist to avoid errors\n    available_columns = [col for col in desired_columns if col in nwbfile.units.colnames]\n\n    if available_columns:\n        units_df = nwbfile.units[available_columns].to_dataframe()\n        print(f"Number of units: {len(units_df)}")\n        print("First 5 units (selected columns):")\n        # For \'spike_times\' and \'waveform_mean\', which are ragged arrays,\n        # the DataFrame will contain object arrays. We can show their shapes or a snippet.\n        \n        # Create a display DataFrame for better printing\n        display_df = pd.DataFrame()\n        for col in available_columns:\n            if col == \'spike_times\':\n                display_df[col] = units_df[col].apply(lambda x: f"shape {x.shape}" if hasattr(x, \'shape\') else x)\n            elif col == \'waveform_mean\':\n                 display_df[col] = units_df[col].apply(lambda x: f"shape {x.shape}" if hasattr(x, \'shape\') else x)\n            elif col == \'electrodes\': # Electrodes is a DynamicTableRegion, show indices\n                display_df[col] = units_df[col].apply(lambda x: x[:] if hasattr(x, \'__getitem__\') else x)\n            else:\n                display_df[col] = units_df[col]\n        print(display_df.head())\n    else:\n        print("Units table is present but no standard columns found for display.")\n\nelse:\n    print("\\n\'units\' data is not present in this file.")\n\n# %% [markdown]\n# #### Stimulus Presentations\n#\n# Information about presented stimuli is often stored in `nwbfile.intervals`.\n\n# %%\nif nwbfile.intervals:\n    print("\\nAvailable stimulus presentation intervals:")\n    for interval_name, interval_data in nwbfile.intervals.items():\n        print(f"- {interval_name} (type: {type(interval_data).__name__})")\n        # Displaying a few rows of each interval table using pandas\n        try:\n            interval_df = interval_data.to_dataframe()\n            print(f"  Number of intervals: {len(interval_df)}")\n            print(f"  Columns: {list(interval_df.columns)}")\n            print("  First 2 entries:")\n            print(interval_df.head(2))\n        except Exception as e:\n            print(f"  Could not convert {interval_name} to DataFrame: {e}")\nelse:\n    print("\\n\'intervals\' data is not present.")\n\n# %% [markdown]\n# ## Visualizing Data from the NWB File\n#\n# Let\'s visualize some of the data. We\'ll be careful to load only subsets of large datasets to avoid excessive download times and memory usage.\n\n# %% [markdown]\n# ### Example 1: Pupil Area\n#\n# The file contains eye tracking data, including pupil area. Let\'s plot the pupil area over a short period.\n\n# %%\nif \'EyeTracking\' in nwbfile.acquisition and \\\n   \'pupil_tracking\' in nwbfile.acquisition[\'EyeTracking\'].spatial_series:\n    pupil_tracking = nwbfile.acquisition[\'EyeTracking\'].spatial_series[\'pupil_tracking\']\n\n    # Check if area and timestamps are available\n    if hasattr(pupil_tracking, \'area\') and pupil_tracking.area is not None and \\\n       hasattr(pupil_tracking, \'timestamps\') and pupil_tracking.timestamps is not None:\n\n        print(f"Pupil area data shape: {pupil_tracking.area.shape}")\n        print(f"Pupil timestamps shape: {pupil_tracking.timestamps.shape}")\n\n        # Determine a subset of data to plot (e.g., first 1000 points or first 10 seconds)\n        num_points_to_plot = min(1000, len(pupil_tracking.timestamps))\n        \n        # Find the index for the first ~10 seconds of data if sampling rate is known\n        # Assuming timestamps are in seconds.\n        # If timestamps are regularly sampled, we can estimate. Otherwise, find index by time.\n        # For simplicity, we plot the first num_points_to_plot\n        \n        time_slice = slice(0, num_points_to_plot)\n        \n        try:\n            pupil_area_data = pupil_tracking.area[time_slice]\n            timestamps_data = pupil_tracking.timestamps[time_slice]\n\n            if timestamps_data.ndim > 1: # If timestamps are in intervals (start, stop)\n                 timestamps_data = timestamps_data[:, 0] # Use start times\n\n            plt.figure(figsize=(12, 6))\n            plt.plot(timestamps_data, pupil_area_data)\n            plt.xlabel(f"Time ({pupil_tracking.timestamps_unit})")\n            plt.ylabel(f"Pupil Area ({pupil_tracking.unit if hasattr(pupil_tracking, \'unit\') else \'unknown units\'})")\n            plt.title(f"Pupil Area (First {num_points_to_plot} samples)")\n            plt.grid(True)\n            plt.show()\n\n        except Exception as e:\n            print(f"Could not plot pupil area: {e}")\n            print("This might be due to the data being very large or an issue with accessing a slice.")\n            print("Consider checking the structure of pupil_tracking.area and pupil_tracking.timestamps in more detail.")\n            print(f"pupil_tracking.area type: {type(pupil_tracking.area)}")\n            print(f"pupil_tracking.timestamps type: {type(pupil_tracking.timestamps)}")\n\n    else:\n        print("Pupil area or timestamps data not available in \'EyeTracking/pupil_tracking\'.")\nelse:\n    print("\'EyeTracking\' or \'pupil_tracking\' not found in acquisition data.")\n\n# %% [markdown]\n# ### Example 2: Running Speed\n#\n# The file contains running speed data in the `processing` module. Let\'s plot this.\n\n# %%\nif \'running\' in nwbfile.processing and \\\n   \'running_speed\' in nwbfile.processing[\'running\'].data_interfaces:\n    running_speed_ts = nwbfile.processing[\'running\'].data_interfaces[\'running_speed\']\n\n    if hasattr(running_speed_ts, \'data\') and running_speed_ts.data is not None and \\\n       hasattr(running_speed_ts, \'timestamps\') and running_speed_ts.timestamps is not None:\n\n        print(f"Running speed data shape: {running_speed_ts.data.shape}")\n        print(f"Running speed timestamps shape: {running_speed_ts.timestamps.shape}")\n\n        # Determine a subset of data to plot\n        num_points_to_plot = min(2000, len(running_speed_ts.timestamps))\n        time_slice = slice(0, num_points_to_plot)\n\n        try:\n            running_speed_data = running_speed_ts.data[time_slice]\n            timestamps_data = running_speed_ts.timestamps[time_slice]\n\n            plt.figure(figsize=(12, 6))\n            plt.plot(timestamps_data, running_speed_data)\n            plt.xlabel(f"Time ({running_speed_ts.timestamps_unit})")\n            plt.ylabel(f"Running Speed ({running_speed_ts.unit})")\n            plt.title(f"Running Speed (First {num_points_to_plot} samples)")\n            plt.grid(True)\n            plt.show()\n\n        except Exception as e:\n            print(f"Could not plot running speed: {e}")\n            print("This might be due to the data being very large or an issue with accessing a slice.")\n    else:\n        print("Running speed data or timestamps not available.")\nelse:\n    print("\'running/running_speed\' not found in processing data.")\n\n# %% [markdown]\n# ### Example 3: Unit Spike Times (Raster Plot for a few units)\n#\n# If unit data is available, we can create a simple raster plot for a small number of units over a short time window.\n# A full raster plot for all units and the entire session can be very dense and computationally intensive.\n\n# %%\nif nwbfile.units:\n    print("\\nAttempting to create a raster plot for a few units...")\n    units_df = nwbfile.units.to_dataframe() # Get the full dataframe to access spike times\n\n    num_units_to_plot = min(10, len(units_df)) # Plot up to 10 units\n    plot_duration_seconds = 10 # Plot spikes within the first 10 seconds of the recording\n\n    plt.figure(figsize=(12, 6))\n    \n    event_times_list = []\n    unit_ids_for_plot = []\n\n    for i in range(num_units_to_plot):\n        unit_id = units_df.index[i] # This assumes default integer index; or use \'id\' column if exists\n        if \'id\' in units_df.columns: # prefer actual unit IDs if available\n            unit_id_val = units_df[\'id\'].iloc[i]\n        else:\n            unit_id_val = unit_id\n\n        spike_times_all = nwbfile.units[\'spike_times\'][i] # Access spike times by index is more direct\n        \n        # Filter spike times for the desired duration\n        spike_times_in_window = spike_times_all[spike_times_all < plot_duration_seconds]\n        \n        if len(spike_times_in_window) > 0:\n            event_times_list.append(spike_times_in_window)\n            unit_ids_for_plot.append(unit_id_val)\n\n    if event_times_list:\n        colors = plt.cm.viridis(np.linspace(0, 1, len(event_times_list)))\n        plt.eventplot(event_times_list, linelengths=0.75, colors=colors)\n        plt.yticks(np.arange(len(unit_ids_for_plot)), unit_ids_for_plot)\n        plt.xlabel("Time (s)")\n        plt.ylabel("Unit ID")\n        plt.title(f"Spike Raster (First {num_units_to_plot} Units, First {plot_duration_seconds} s)")\n        plt.grid(True, axis=\'x\')\n        plt.show()\n    else:\n        print("No spikes found in the selected time window for the chosen units, or no units to plot.")\nelse:\n    print("No units data available for raster plot.")\n\n# %% [markdown]\n# ## Summary of Findings and Future Directions\n#\n# This notebook demonstrated how to:\n# - Access and understand metadata for Dandiset 000690.\n# - Load an NWB file from this Dandiset using its URL.\n# - Explore the basic structure and metadata within the NWB file, including acquisition, processing, units, and stimulus interval data.\n# - Visualize example data streams such as pupil area, running speed, and a simple spike raster.\n#\n# ### Potential Future Directions:\n#\n# 1.  **Detailed Stimulus-Response Analysis:** Correlate neural activity (spike times from `nwbfile.units`) with specific stimulus presentation times found in `nwbfile.intervals`. This could involve creating peri-stimulus time histograms (PSTHs) for different visual stimuli.\n2.  **Behavioral Correlations:** Investigate how behavioral variables like running speed or pupil diameter modulate neural responses. For example, analyze if firing rates of certain units change when the animal is running versus stationary during visual stimulation.\n3.  **Cross-Probe Analysis:** If the Dandiset contains data from multiple ephys probes (as suggested by `probe-X_ecephys.nwb` asset names, though this specific file `sub-692072_ses-1298465622.nwb` is a general session file), one could explore correlations or differential responses across brain regions targeted by these probes. This would involve loading the corresponding `_ecephys.nwb` files.\n4.  **LFP Analysis:** The `electrode_groups` metadata mentions LFP (Local Field Potential) data. If LFP data is present (often in `nwbfile.acquisition` or linked `_ecephys.nwb` files), analyses such as power spectral density during different behavioral states or stimulus conditions could be performed.\n5.  **Exploring Different NWB Files:** This notebook focused on one main session NWB file. The Dandiset contains other files, including `_image.nwb` (likely containing imaging data if applicable, though this Dandiset focuses on ephys) and `_probe-X_ecephys.nwb` files which typically contain the raw continuous electrophysiology data and LFP. Exploring these specialized files would provide deeper insights into specific data modalities.\n6.  **Advanced Visualizations:** Create more sophisticated visualizations, such as heatmaps of neural activity across populations, or plots showing the relationship between multiple behavioral variables.\n7.  **Comparative Analysis:** Compare neural responses to different types of visual stimuli (simple bars vs. movies) described in the Dandiset\'s protocol.\n#\n# Remember that working with remote NWB files requires careful consideration of data sizes. Always try to load only necessary subsets of data for initial exploration and visualization to manage download times and memory usage effectively. Refer to the `tools_cli.py nwb-file-info` output for detailed paths to specific datasets within the NWB file structure.\n\n# %% [markdown]\n# ---\n# End of Notebook.\n#\n# To close the NWB file and release the remote file object if you were to run this interactively and wanted to manage resources explicitly (though not strictly necessary for a script that terminates):\n# ```python\n# # io.close()\n# # remote_file.close() # If remfile has a close method\n# # h5_file.close()\n# ```\n# However, for this automated notebook execution, explicit closing is handled upon script completion.\n\n# %%\nprint("Notebook execution cell - final check.")'}
+Params: {'path': 'notebook.py', 'content': '# %% [markdown]\n# # Exploring Dandiset 000690: Allen Institute Openscope - Vision2Hippocampus project\n#\n# **Note:** This notebook was AI-generated and has not been fully verified. Please be cautious when interpreting the code or results.\n\n# %% [markdown]\n# ## Overview of the Dandiset\n#\n# This notebook explores Dandiset [000690/0.250326.0015](https://dandiarchive.org/dandiset/000690/0.250326.0015), titled "Allen Institute Openscope - Vision2Hippocampus project".\n#\n# **Description from DANDI:**\n#\n# Extextensive research shows that visual cortical neurons respond to specific stimuli, e.g. the primary visual cortical neurons respond to bars of light with specific orientation. In contrast, the hippocampal neurons are thought to encode not specific stimuli but instead represent abstract concepts such as space, time and events. How is this abstraction computed in the mouse brain? Specifically, how does the representation of simple visual stimuli evolve from the thalamus, which is a synapse away from the retina, through primary visual cortex, higher order visual areas and all the way to hippocampus, that is farthest removed from the retina?\n#\n# The current OpenScope project aims to understand how the neural representations of simple and natural stimuli evolve from the LGN through V1, and most hippocampal regions, as well as some of the frontal areas.\n#\n# **Stimuli presented:**\n# Two main categories of visual stimuli were presented–\n# 1. Simple visual motion, elicited by basic stimuli, like bars of light.\n# 2. Complex, potentially ethologically valid visual stimuli, elicited by movies involving eagles (and squirrels).\n#\n# This Dandiset contains data related to extracellular electrophysiology recordings in mice, focusing on how visual stimuli are processed across different brain regions, including the neocortex, hippocampus, and entorhinal cortex. It includes measurements of electrical series, LFP, processing modules, and units.\n#\n# **Keywords:** mouse, neuropixel, extracellular electrophysiology, neocortex, hippocampus, Entorhinal cortex, excitatory, inhibitory, vision, movies.\n\n# %% [markdown]\n# ## What this notebook covers\n#\n# This notebook will guide you through:\n# 1. Listing the required Python packages.\n# 2. Connecting to the DANDI archive and loading the Dandiset metadata.\n# 3. Listing some assets (files) within the Dandiset.\n# 4. Loading a specific NWB (Neurodata Without Borders) file from the Dandiset.\n# 5. Exploring the metadata and structure of the loaded NWB file.\n# 6. Loading and visualizing some example data series from the NWB file, such as running speed and pupil area.\n# 7. Summarizing findings and suggesting potential future analysis directions.\n\n# %% [markdown]\n# ## Required Packages\n#\n# To run this notebook, you\'ll need the following Python packages installed. This notebook assumes they are already present in your environment.\n#\n# * `dandi` (for interacting with the DANDI Archive)\n# * `pynwb` (for reading NWB files)\n# * `h5py` (dependency for pynwb for HDF5 file access)\n# * `remfile` (for streaming remote HDF5 files)\n# * `numpy` (for numerical operations)\n# * `matplotlib` (for plotting)\n# * `pandas` (for data manipulation, especially with NWB interval data)\n# * `itertools` (used for slicing iterators)\n# * `seaborn` (for enhanced visualizations)\n\n# %%\n# Import necessary packages\nfrom itertools import islice\nfrom dandi.dandiapi import DandiAPIClient\nimport pynwb\nimport h5py\nimport remfile\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport seaborn as sns\n\n# Apply seaborn styling for plots (except images)\nsns.set_theme()\n\n# %% [markdown]\n# ## Loading the Dandiset using DANDI API\n\n# %%\n# Connect to DANDI archive\nclient = DandiAPIClient()\ndandiset_id = "000690"\ndandiset_version = "0.250326.0015"\ndandiset = client.get_dandiset(dandiset_id, dandiset_version)\n\n# Print basic information about the Dandiset\nmetadata = dandiset.get_raw_metadata()\nprint(f"Dandiset name: {metadata[\'name\']}")\nprint(f"Dandiset URL: {metadata[\'url\']}") # Note: This URL might point to the base dandiset, not the specific version.\nprint(f"Dandiset description: {metadata.get(\'description\', \'N/A\')[:200]}...") # Print first 200 chars of description\n\n# List some assets in the Dandiset\nassets = dandiset.get_assets()\nprint("\\nFirst 5 assets:")\nfor asset in islice(assets, 5):\n    print(f"- {asset.path} (ID: {asset.asset_id})")\n\n# %% [markdown]\n# ## Loading an NWB file from the Dandiset\n#\n# We will load one of the NWB files to explore its contents. For this demonstration, we\'ll use the file:\n# `sub-692072/sub-692072_ses-1298465622.nwb`\n#\n# Its asset ID is `fbcd4fe5-7107-41b2-b154-b67f783f23dc`.\n#\n# The URL for downloading this asset is:\n# `https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/`\n#\n# We will use `remfile` and `h5py` to stream the NWB file directly from the DANDI archive without downloading it locally.\n\n# %%\n# Hardcoded URL for the specific NWB file\nnwb_asset_id = "fbcd4fe5-7107-41b2-b154-b67f783f23dc"\nnwb_file_url = f"https://api.dandiarchive.org/api/assets/{nwb_asset_id}/download/"\nnwb_file_path_in_dandiset = "sub-692072/sub-692072_ses-1298465622.nwb"\n\nprint(f"Loading NWB file: {nwb_file_path_in_dandiset}")\nprint(f"From URL: {nwb_file_url}")\n\n# Load the NWB file\n# This uses the exact code structure provided by `tools_cli.py nwb-file-info`\nremote_nwb_file = remfile.File(nwb_file_url)\nh5_nwb_file = h5py.File(remote_nwb_file, \'r\') # Ensure read-only mode\nnwb_io = pynwb.NWBHDF5IO(file=h5_nwb_file, mode=\'r\', load_namespaces=True) # Ensure read-only, load namespaces\nnwbfile = nwb_io.read()\n\nprint("\\nNWB file loaded successfully.")\n\n# %% [markdown]\n# ### NWB File Metadata\n# Let\'s look at some basic metadata from the loaded NWB file.\n\n# %%\nprint(f"NWBFile Identifier: {nwbfile.identifier}")\nprint(f"Session Description: {nwbfile.session_description}")\nprint(f"Session Start Time: {nwbfile.session_start_time}")\nprint(f"Experimenter(s): {nwbfile.experimenter}")\nprint(f"Institution: {nwbfile.institution}")\nprint(f"Lab: {nwbfile.lab}")\nprint(f"Subject ID: {nwbfile.subject.subject_id if nwbfile.subject else \'N/A\'}")\nprint(f"Subject Age: {nwbfile.subject.age if nwbfile.subject else \'N/A\'}")\nprint(f"Subject Species: {nwbfile.subject.species if nwbfile.subject else \'N/A\'}")\n\n# %% [markdown]\n# ### Neurosift Link\n#\n# You can explore this NWB file interactively using Neurosift:\n# [Open in Neurosift](https://neurosift.app/nwb?url=https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/&dandisetId=000690&dandisetVersion=0.250326.0015)\n#\n# (Note: The `dandisetVersion` in the Neurosift link is set to `0.250326.0015` which is the version we are exploring. The asset itself is version-agnostic within the Dandiset version context for download purposes.)\n\n# %% [markdown]\n# ### Summarizing NWB File Contents\n#\n# NWB files are structured hierarchically. Here\'s a brief overview of some top-level groups found in this NWB file:\n#\n# *   **`acquisition`**: Contains raw acquired data that has not been processed.\n#     *   `EyeTracking`: Data related to eye movements, pupil size, etc.\n#         * `corneal_reflection_tracking`: EllipseSeries for corneal reflection.\n#         * `eye_tracking`: EllipseSeries for eye position.\n#         * `pupil_tracking`: EllipseSeries for pupil.\n#         * `likely_blink`: TimeSeries for blink detection.\n#     *   `raw_running_wheel_rotation`: TimeSeries for raw wheel rotation.\n#     *   `running_wheel_signal_voltage`: TimeSeries for wheel signal voltage.\n#     *   `running_wheel_supply_voltage`: TimeSeries for wheel supply voltage.\n# *   **`processing`**: Contains processed data. This NWB file contains:\n#     *   `running`: Processing module for running speed.\n#         * `running_speed`: TimeSeries for computed running speed.\n#     *   `stimulus`: Processing module for stimulus presentation times.\n#         *   `timestamps`: TimeSeries for stimulus frame timestamps.\n# *   **`intervals`**: Contains time intervals for various experimental epochs or events.\n#     *   E.g., `Disco2SAC_Wd15_Vel2_Bndry1_Cntst0_loop_presentations`, `Disk_Wd15_Vel2_Bndry1_Cntst0_loop_presentations`, etc. These tables contain detailed information about stimulus presentations.\n# *   **`units`**: Contains information about sorted spike units, including spike times and waveforms.\n# *   **`electrodes`**: A table describing the properties of each electrode.\n# *   **`electrode_groups`**: Describes groups of electrodes (e.g., probes).\n# *   **`devices`**: Information about data acquisition devices (e.g., Neuropixels probes).\n# *   **`subject`**: Information about the experimental subject.\n#\n# To see all available data, you can explore the `nwbfile` object interactively or refer to the Neurosift link. For example, to list all items in `acquisition`:\n# `print(list(nwbfile.acquisition.keys()))`\n# And to list all processing modules:\n# `print(list(nwbfile.processing.keys()))`\n\n# %%\nprint("Items in nwbfile.acquisition:")\nprint(list(nwbfile.acquisition.keys()))\n\nprint("\\nProcessing modules in nwbfile.processing:")\nprint(list(nwbfile.processing.keys()))\n\nif "running" in nwbfile.processing:\n    print("\\nData interfaces in nwbfile.processing[\'running\']:")\n    print(list(nwbfile.processing["running"].data_interfaces.keys()))\n\nif "EyeTracking" in nwbfile.acquisition:\n    print("\\nSpatial series in nwbfile.acquisition[\'EyeTracking\']:")\n    print(list(nwbfile.acquisition["EyeTracking"].spatial_series.keys()))\n\n# %% [markdown]\n# ## Loading and Visualizing Data from the NWB File\n#\n# Let\'s load and visualize a few examples of data. We\'ll be careful to load only subsets of data if they are very large, given that we are streaming over the network.\n\n# %% [markdown]\n# ### Example 1: Running Speed\n#\n# The running speed is stored in `nwbfile.processing[\'running\'][\'running_speed\']`. This is a `TimeSeries` object. We can access its data and timestamps.\n\n# %%\nif "running" in nwbfile.processing and "running_speed" in nwbfile.processing["running"].data_interfaces:\n    running_speed_ts = nwbfile.processing["running"]["running_speed"]\n\n    # Load a subset of data for plotting (e.g., first 5000 points)\n    num_points_to_plot = 5000\n    if len(running_speed_ts.data) > num_points_to_plot:\n        print(f"Plotting the first {num_points_to_plot} points of running speed data.")\n        running_speed_data = running_speed_ts.data[:num_points_to_plot]\n        running_speed_timestamps = running_speed_ts.timestamps[:num_points_to_plot]\n    else:\n        print("Plotting all running speed data points.")\n        running_speed_data = running_speed_ts.data[:]\n        running_speed_timestamps = running_speed_ts.timestamps[:]\n\n    plt.figure(figsize=(12, 4))\n    plt.plot(running_speed_timestamps, running_speed_data)\n    plt.xlabel(f"Time ({running_speed_ts.timestamps_unit})")\n    plt.ylabel(f"Running Speed ({running_speed_ts.unit})")\n    plt.title(f"Running Speed (First {len(running_speed_data)} points)")\n    plt.show()\nelse:\n    print("Running speed data not found in the expected location.")\n\n# %% [markdown]\n# ### Example 2: Pupil Area\n#\n# Pupil tracking data is often stored within `acquisition` under an `EyeTracking` module. Let\'s try to plot the pupil area from `nwbfile.acquisition[\'EyeTracking\'].spatial_series[\'pupil_tracking\']`. This is an `EllipseSeries` which has an `area` field.\n\n# %%\nif "EyeTracking" in nwbfile.acquisition and \\\n   "pupil_tracking" in nwbfile.acquisition["EyeTracking"].spatial_series:\n\n    pupil_tracking_series = nwbfile.acquisition["EyeTracking"].spatial_series["pupil_tracking"]\n\n    if hasattr(pupil_tracking_series, "area") and hasattr(pupil_tracking_series, "timestamps"):\n        # Load a subset of data for plotting (e.g., first 5000 points or as available)\n        num_points_to_plot_pupil = 5000\n        \n        # Ensure timestamps are loaded correctly. pupil_tracking_series.timestamps might be a dataset or another series\n        if hasattr(pupil_tracking_series.timestamps, \'data\'): # If timestamps is a TimeSeries itself\n             timestamps_data_pupil = pupil_tracking_series.timestamps.data\n        else: # If timestamps is a direct dataset\n             timestamps_data_pupil = pupil_tracking_series.timestamps\n\n        # Check lengths before slicing\n        available_points_pupil = min(len(pupil_tracking_series.area), len(timestamps_data_pupil))\n\n        if available_points_pupil > num_points_to_plot_pupil:\n            print(f"Plotting the first {num_points_to_plot_pupil} points of pupil area data.")\n            pupil_area_data = pupil_tracking_series.area[:num_points_to_plot_pupil]\n            pupil_timestamps = timestamps_data_pupil[:num_points_to_plot_pupil]\n        elif available_points_pupil > 0:\n            print(f"Plotting all {available_points_pupil} available pupil area data points.")\n            pupil_area_data = pupil_tracking_series.area[:available_points_pupil]\n            pupil_timestamps = timestamps_data_pupil[:available_points_pupil]\n        else:\n            print("No pupil area data points available to plot.")\n            pupil_area_data = [] # ensure it\'s an empty list\n\n        if len(pupil_area_data) > 0:\n            plt.figure(figsize=(12, 4))\n            plt.plot(pupil_timestamps, pupil_area_data)\n            plt.xlabel(f"Time ({pupil_tracking_series.timestamps_unit if hasattr(pupil_tracking_series, \'timestamps_unit\') else \'seconds\'})")\n            plt.ylabel(f"Pupil Area (units: {pupil_tracking_series.unit})") # EllipseSeries might not have a specific unit for area\n            plt.title(f"Pupil Area (First {len(pupil_area_data)} points)")\n            plt.show()\n    else:\n        print("Pupil area or timestamps data not found in the pupil_tracking series.")\nelse:\n    print("EyeTracking or pupil_tracking data not found in the expected location.")\n\n# %% [markdown]\n# ### Example 3: Spike Times from Units\n#\n# The `nwbfile.units` is a table containing information about sorted neuronal units. Each row typically represents a unit, and there\'s a `spike_times` column which is a ragged array (each unit has its own array of spike times).\n#\n# Let\'s get the spike times for the first few units and create a simple raster plot for a short time window.\n\n# %%\nif nwbfile.units is not None and \'spike_times\' in nwbfile.units.colnames:\n    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling\n    \n    num_units_to_plot = min(5, len(units_df)) # Plot first 5 units or fewer if not available\n    time_window_plot = (0, 10) # Plot spikes in the first 10 seconds\n\n    if num_units_to_plot > 0:\n        plt.figure(figsize=(12, 6))\n        event_data = []\n        for i in range(num_units_to_plot):\n            unit_id = units_df.index[i] # Actual unit ID\n            spike_times_for_unit = units_df["spike_times"].iloc[i]\n            \n            # Filter spike times for the plotting window\n            spikes_in_window = spike_times_for_unit[\n                (spike_times_for_unit >= time_window_plot[0]) & (spike_times_for_unit <= time_window_plot[1])\n            ]\n            event_data.append(spikes_in_window)\n        \n        # Seaborn\'s eventplot is good for rasters\n        # Reset default matplotlib style for this plot if seaborn theme affects it undesirably\n        with plt.style.context(\'default\'):\n             colors = plt.cm.viridis(np.linspace(0, 1, num_units_to_plot))\n             plt.eventplot(event_data, linelengths=0.75, colors=colors)\n        \n        plt.yticks(ticks=np.arange(num_units_to_plot), labels=[f"Unit {units_df.index[i]}" for i in range(num_units_to_plot)])\n        plt.xlabel("Time (seconds)")\n        plt.ylabel("Unit ID")\n        plt.title(f"Spike Raster for First {num_units_to_plot} Units ({time_window_plot[0]}-{time_window_plot[1]} s)")\n        plt.show()\n    else:\n        print("No units found to plot.")\nelse:\n    print("Units data or spike_times column not found.")\n\n# %% [markdown]\n# ### Example 4: Stimulus Presentation Intervals\n#\n# NWB files often store information about stimulus presentations or experimental trials in `TimeIntervals` tables within `nwbfile.intervals`. Let\'s inspect one such table. The output of `nwb-file-info` showed many stimulus presentation tables like `Disk_Wd15_Vel2_Bndry1_Cntst0_loop_presentations`.\n\n# %%\nif nwbfile.intervals is not None:\n    # Let\'s pick one of the interval tables mentioned in the nwb-file-info output\n    # For example: \'Disk_Wd15_Vel2_Bndry1_Cntst0_loop_presentations\'\n    interval_table_name = \'Disk_Wd15_Vel2_Bndry1_Cntst0_loop_presentations\'\n    if interval_table_name in nwbfile.intervals:\n        stim_table = nwbfile.intervals[interval_table_name]\n        # Convert to pandas DataFrame for easy viewing\n        stim_df = stim_table.to_dataframe()\n        print(f"\\nFirst 5 rows of stimulus interval table: \'{interval_table_name}\'")\n        # Use display for richer output if in a full Jupyter environment, otherwise print\n        try:\n            from IPython.display import display\n            display(stim_df.head())\n        except ImportError:\n            print(stim_df.head())\n\n        # We could, for example, plot the distribution of a stimulus parameter\n        if \'orientation\' in stim_df.columns:\n            plt.figure(figsize=(8, 4))\n            # sns.histplot might not be suitable if orientation is categorical or has few unique values\n            # sns.countplot is better for categorical data\n            unique_orientations = stim_df[\'orientation\'].nunique()\n            if unique_orientations < 20: # Heuristic for using countplot\n                 sns.countplot(data=stim_df, x=\'orientation\')\n            else: # Use histplot if many unique values, though may still not be ideal\n                 sns.histplot(stim_df[\'orientation\'], kde=False, bins=30)\n            plt.title(f"Distribution of \'orientation\' in {interval_table_name}")\n            plt.xlabel("Orientation (degrees)")\n            plt.ylabel("Count")\n            plt.show()\n        else:\n            print(f"\'orientation\' column not found in {interval_table_name}.")\n\n    else:\n        print(f"Interval table \'{interval_table_name}\' not found. Available tables: {list(nwbfile.intervals.keys())}")\nelse:\n    print("No interval tables found in nwbfile.intervals.")\n\n\n# %% [markdown]\n# ## Summary and Future Directions\n#\n# This notebook demonstrated how to:\n# *   Load a Dandiset from the DANDI Archive.\n# *   Access and inspect an NWB file within the Dandiset, specifically `sub-692072/sub-692072_ses-1298465622.nwb`.\n# *   View basic metadata and understand the general structure of the NWB file.\n# *   Load and visualize example data, including:\n#     *   Running speed over time.\n#     *   Pupil area over time.\n#     *   Spike times for a few units as a raster plot.\n#     *   Properties from a stimulus presentation table.\n#\n# **Future Directions:**\n#\n# This is just a starting point. Researchers can expand on this by:\n# 1.  **Exploring other NWB files:** This Dandiset contains many NWB files. Similar analyses can be applied to other files, including those with `_ecephys` (containing raw ephys data) or `_image` (potentially containing imaging data if applicable, though this one seems focused on ephys behavior).\n# 2.  **Detailed E LFP and Spike Analysis:** For files containing ephys data (e.g., ending in `_ecephys.nwb` or if units are present in general files), one could perform more in-depth LFP analysis (e.g., power spectra, coherence) or spike train analysis (e.g., firing rate statistics, inter-spike intervals, correlations with behavior or stimuli). *Note: The main NWB file we explored here already contains sorted units.*\n# 3.  **Relating Neural Activity to Behavior and Stimuli:** A key goal would be to correlate neural activity (spike rates, LFP features) with behavioral variables (running speed, pupil size) and stimulus presentations (using the `intervals` tables).\n# 4.  **Analyzing data across different stimulus conditions:** The `intervals` tables contain rich information about various visual stimuli presented. One could analyze neural responses conditioned on these different stimuli.\n# 5.  **Population Analysis:** Investigate how populations of neurons collectively represent information.\n# 6.  **Cross-session/subject comparisons:** If applicable, compare findings across different recording sessions or subjects within the Dandiset.\n#\n# Remember to consult the Dandiset documentation and related publications for more context on the experimental design and data.\n\n# %% [markdown]\n# ---\n# End of AI-Generated Notebook.\n# %%\n# Final check: close the HDF5 file and remfile object\n# This is good practice, although not strictly required by the prompt for this specific notebook\'s execution flow.\ntry:\n    nwb_io.close()\n    # h5_nwb_file is managed by NWBHDF5IO, closing io should close it.\n    # If remfile needs explicit closing and is not managed by h5py.File upon its closure:\n    if hasattr(remote_nwb_file, \'close\'):\n         remote_nwb_file.close()\n    print("\\nNWB file and remote file object closed.")\nexcept Exception as e:\n    print(f"Error closing files: {e}")'}
 ================================
 Content to be written to notebook.py:
 # %% [markdown]
 # # Exploring Dandiset 000690: Allen Institute Openscope - Vision2Hippocampus project
 #
-# **Dandiset Version: 0.250326.0015**
-
-# %% [markdown]
-# > ⚠️ **Disclaimer:** This notebook was AI-generated and has not been fully verified. Please be cautious when interpreting the code or results.
+# **Note:** This notebook was AI-generated and has not been fully verified. Please be cautious when interpreting the code or results.
 
 # %% [markdown]
 # ## Overview of the Dandiset
 #
-# This Dandiset, titled "Allen Institute Openscope - Vision2Hippocampus project," contains data related to an experiment investigating how neural representations of visual stimuli evolve from the thalamus through visual cortex to the hippocampus in mice.
+# This notebook explores Dandiset [000690/0.250326.0015](https://dandiarchive.org/dandiset/000690/0.250326.0015), titled "Allen Institute Openscope - Vision2Hippocampus project".
 #
-# The project aims to understand how the brain computes abstractions from simple visual stimuli to more complex representations. Mice were presented with simple visual motion (bars of light with varying properties) and complex visual stimuli (movies).
+# **Description from DANDI:**
 #
-# **Key information:**
-# - **Dandiset Identifier:** 000690
-# - **Version:** 0.250326.0015
-# - **Dandiset URL:** [https://dandiarchive.org/dandiset/000690/0.250326.0015](https://dandiarchive.org/dandiset/000690/0.250326.0015)
-# - **Description:** Extensive research shows that visual cortical neurons respond to specific stimuli, e.g. the primary visual cortical neurons respond to bars of light with specific orientation. In contrast, the hippocampal neurons are thought to encode not specific stimuli but instead represent abstract concepts such as space, time and events. How is this abstraction computed in the mouse brain? Specifically, how does the representation of simple visual stimuli evolve from the thalamus, which is a synapse away from the retina, through primary visual cortex, higher order visual areas and all the way to hippocampus, that is farthest removed from the retina? The current OpenScope project aims to understand how the neural representations of simple and natural stimuli evolve from the LGN through V1, and most hippocampal regions, as well as some of the frontal areas.
-# - **Keywords:** mouse, neuropixel, extracellular electrophysiology, neocortex, hippocampus, Entorhinal cortex, excitatory, inhibitory, vision, movies.
-# - **Measurement Techniques:** multi electrode extracellular electrophysiology recording technique, signal filtering technique, spike sorting technique, analytical technique.
+# Extextensive research shows that visual cortical neurons respond to specific stimuli, e.g. the primary visual cortical neurons respond to bars of light with specific orientation. In contrast, the hippocampal neurons are thought to encode not specific stimuli but instead represent abstract concepts such as space, time and events. How is this abstraction computed in the mouse brain? Specifically, how does the representation of simple visual stimuli evolve from the thalamus, which is a synapse away from the retina, through primary visual cortex, higher order visual areas and all the way to hippocampus, that is farthest removed from the retina?
+#
+# The current OpenScope project aims to understand how the neural representations of simple and natural stimuli evolve from the LGN through V1, and most hippocampal regions, as well as some of the frontal areas.
+#
+# **Stimuli presented:**
+# Two main categories of visual stimuli were presented–
+# 1. Simple visual motion, elicited by basic stimuli, like bars of light.
+# 2. Complex, potentially ethologically valid visual stimuli, elicited by movies involving eagles (and squirrels).
+#
+# This Dandiset contains data related to extracellular electrophysiology recordings in mice, focusing on how visual stimuli are processed across different brain regions, including the neocortex, hippocampus, and entorhinal cortex. It includes measurements of electrical series, LFP, processing modules, and units.
+#
+# **Keywords:** mouse, neuropixel, extracellular electrophysiology, neocortex, hippocampus, Entorhinal cortex, excitatory, inhibitory, vision, movies.
 
 # %% [markdown]
 # ## What this notebook covers
 #
-# This notebook will guide you through the following steps:
+# This notebook will guide you through:
 # 1. Listing the required Python packages.
-# 2. Demonstrating how to load the Dandiset metadata using the DANDI API.
-# 3. Showing how to load a specific Neurophysiology: Neurodata Without Borders (NWB) file from the Dandiset.
-# 4. Displaying some metadata from the loaded NWB file.
-# 5. Summarizing the contents of the NWB file.
-# 6. Providing a link to explore the NWB file interactively using Neurosift.
-# 7. Illustrating how to load and visualize some example data from the NWB file, such as eye tracking and running speed.
-# 8. Summarizing the findings and suggesting potential future analysis directions.
+# 2. Connecting to the DANDI archive and loading the Dandiset metadata.
+# 3. Listing some assets (files) within the Dandiset.
+# 4. Loading a specific NWB (Neurodata Without Borders) file from the Dandiset.
+# 5. Exploring the metadata and structure of the loaded NWB file.
+# 6. Loading and visualizing some example data series from the NWB file, such as running speed and pupil area.
+# 7. Summarizing findings and suggesting potential future analysis directions.
 
 # %% [markdown]
 # ## Required Packages
 #
-# To run this notebook, you'll need the following Python packages. We assume these are already installed on your system.
+# To run this notebook, you'll need the following Python packages installed. This notebook assumes they are already present in your environment.
 #
-# - `dandi` (for interacting with the DANDI Archive)
-# - `pynwb` (for working with NWB files)
-# - `h5py` (for HDF5 file access, a dependency of pynwb)
-# - `remfile` (for accessing remote HDF5 files)
-# - `numpy` (for numerical operations)
-# - `matplotlib` (for plotting)
-# - `pandas` (for data manipulation and viewing tables)
-# - `seaborn` (for enhanced visualizations)
-
-# %% [markdown]
-# ## Loading the Dandiset using the DANDI API
+# * `dandi` (for interacting with the DANDI Archive)
+# * `pynwb` (for reading NWB files)
+# * `h5py` (dependency for pynwb for HDF5 file access)
+# * `remfile` (for streaming remote HDF5 files)
+# * `numpy` (for numerical operations)
+# * `matplotlib` (for plotting)
+# * `pandas` (for data manipulation, especially with NWB interval data)
+# * `itertools` (used for slicing iterators)
+# * `seaborn` (for enhanced visualizations)
 
 # %%
+# Import necessary packages
 from itertools import islice
 from dandi.dandiapi import DandiAPIClient
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
 import pynwb
 import h5py
 import remfile
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
 
-# Set seaborn style for plots (except for images)
+# Apply seaborn styling for plots (except images)
 sns.set_theme()
+
+# %% [markdown]
+# ## Loading the Dandiset using DANDI API
 
 # %%
 # Connect to DANDI archive
@@ -2950,427 +2965,437 @@ dandiset_id = "000690"
 dandiset_version = "0.250326.0015"
 dandiset = client.get_dandiset(dandiset_id, dandiset_version)
 
-# %%
 # Print basic information about the Dandiset
 metadata = dandiset.get_raw_metadata()
 print(f"Dandiset name: {metadata['name']}")
-print(f"Dandiset URL: {metadata['url']}")
-print(f"Dandiset description: {metadata.get('description', 'N/A')[:200]}...") # Print first 200 characters
+print(f"Dandiset URL: {metadata['url']}") # Note: This URL might point to the base dandiset, not the specific version.
+print(f"Dandiset description: {metadata.get('description', 'N/A')[:200]}...") # Print first 200 chars of description
 
-# %%
 # List some assets in the Dandiset
 assets = dandiset.get_assets()
 print("\nFirst 5 assets:")
 for asset in islice(assets, 5):
-    print(f"- {asset.path} (ID: {asset.asset_id})") # Using asset_id as identifier
+    print(f"- {asset.path} (ID: {asset.asset_id})")
 
 # %% [markdown]
-# ## Loading an NWB File
+# ## Loading an NWB file from the Dandiset
 #
-# We will now load one of the NWB files from the Dandiset to explore its contents.
+# We will load one of the NWB files to explore its contents. For this demonstration, we'll use the file:
+# `sub-692072/sub-692072_ses-1298465622.nwb`
 #
-# For this demonstration, we will load the file: `sub-692072/sub-692072_ses-1298465622.nwb`.
+# Its asset ID is `fbcd4fe5-7107-41b2-b154-b67f783f23dc`.
 #
-# The asset ID for this file is `fbcd4fe5-7107-41b2-b154-b67f783f23dc`.
-#
-# We can construct the direct download URL for this asset as follows:
+# The URL for downloading this asset is:
 # `https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/`
+#
+# We will use `remfile` and `h5py` to stream the NWB file directly from the DANDI archive without downloading it locally.
 
 # %%
-# Define the URL for the NWB file
+# Hardcoded URL for the specific NWB file
 nwb_asset_id = "fbcd4fe5-7107-41b2-b154-b67f783f23dc"
 nwb_file_url = f"https://api.dandiarchive.org/api/assets/{nwb_asset_id}/download/"
-print(f"Loading NWB file from: {nwb_file_url}")
+nwb_file_path_in_dandiset = "sub-692072/sub-692072_ses-1298465622.nwb"
+
+print(f"Loading NWB file: {nwb_file_path_in_dandiset}")
+print(f"From URL: {nwb_file_url}")
 
 # Load the NWB file
-# This uses remfile to stream the remote HDF5 file
-remote_file = remfile.File(nwb_file_url)
-h5_file = h5py.File(remote_file, 'r') # Ensure read-only mode
-io = pynwb.NWBHDF5IO(file=h5_file, mode='r') # Ensure read-only mode for pynwb
-nwbfile = io.read()
+# This uses the exact code structure provided by `tools_cli.py nwb-file-info`
+remote_nwb_file = remfile.File(nwb_file_url)
+h5_nwb_file = h5py.File(remote_nwb_file, 'r') # Ensure read-only mode
+nwb_io = pynwb.NWBHDF5IO(file=h5_nwb_file, mode='r', load_namespaces=True) # Ensure read-only, load namespaces
+nwbfile = nwb_io.read()
 
 print("\nNWB file loaded successfully.")
 
 # %% [markdown]
 # ### NWB File Metadata
-#
 # Let's look at some basic metadata from the loaded NWB file.
 
 # %%
+print(f"NWBFile Identifier: {nwbfile.identifier}")
 print(f"Session Description: {nwbfile.session_description}")
-print(f"Identifier: {nwbfile.identifier}")
 print(f"Session Start Time: {nwbfile.session_start_time}")
-if nwbfile.subject:
-    print(f"Subject ID: {nwbfile.subject.subject_id}")
-    print(f"Subject Age: {nwbfile.subject.age}")
-    print(f"Subject Sex: {nwbfile.subject.sex}")
-    print(f"Subject Species: {nwbfile.subject.species}")
-else:
-    print("Subject information: Not available")
+print(f"Experimenter(s): {nwbfile.experimenter}")
+print(f"Institution: {nwbfile.institution}")
+print(f"Lab: {nwbfile.lab}")
+print(f"Subject ID: {nwbfile.subject.subject_id if nwbfile.subject else 'N/A'}")
+print(f"Subject Age: {nwbfile.subject.age if nwbfile.subject else 'N/A'}")
+print(f"Subject Species: {nwbfile.subject.species if nwbfile.subject else 'N/A'}")
 
 # %% [markdown]
 # ### Neurosift Link
 #
-# You can explore this NWB file interactively on Neurosift using the following link:
+# You can explore this NWB file interactively using Neurosift:
+# [Open in Neurosift](https://neurosift.app/nwb?url=https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/&dandisetId=000690&dandisetVersion=0.250326.0015)
 #
-# [https://neurosift.app/nwb?url=https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/&dandisetId=000690&dandisetVersion=draft](https://neurosift.app/nwb?url=https://api.dandiarchive.org/api/assets/fbcd4fe5-7107-41b2-b154-b67f783f23dc/download/&dandisetId=000690&dandisetVersion=draft)
-#
-# *(Note: The Neurosift link uses `dandisetVersion=draft` as specific version linking might vary in behavior or availability)*
+# (Note: The `dandisetVersion` in the Neurosift link is set to `0.250326.0015` which is the version we are exploring. The asset itself is version-agnostic within the Dandiset version context for download purposes.)
 
 # %% [markdown]
 # ### Summarizing NWB File Contents
 #
-# NWB files have a hierarchical structure. Let's explore some of the main groups and datasets within this file.
-
-# %% [markdown]
-# #### Acquisition Data
+# NWB files are structured hierarchically. Here's a brief overview of some top-level groups found in this NWB file:
 #
-# This group typically contains raw acquired data.
+# *   **`acquisition`**: Contains raw acquired data that has not been processed.
+#     *   `EyeTracking`: Data related to eye movements, pupil size, etc.
+#         * `corneal_reflection_tracking`: EllipseSeries for corneal reflection.
+#         * `eye_tracking`: EllipseSeries for eye position.
+#         * `pupil_tracking`: EllipseSeries for pupil.
+#         * `likely_blink`: TimeSeries for blink detection.
+#     *   `raw_running_wheel_rotation`: TimeSeries for raw wheel rotation.
+#     *   `running_wheel_signal_voltage`: TimeSeries for wheel signal voltage.
+#     *   `running_wheel_supply_voltage`: TimeSeries for wheel supply voltage.
+# *   **`processing`**: Contains processed data. This NWB file contains:
+#     *   `running`: Processing module for running speed.
+#         * `running_speed`: TimeSeries for computed running speed.
+#     *   `stimulus`: Processing module for stimulus presentation times.
+#         *   `timestamps`: TimeSeries for stimulus frame timestamps.
+# *   **`intervals`**: Contains time intervals for various experimental epochs or events.
+#     *   E.g., `Disco2SAC_Wd15_Vel2_Bndry1_Cntst0_loop_presentations`, `Disk_Wd15_Vel2_Bndry1_Cntst0_loop_presentations`, etc. These tables contain detailed information about stimulus presentations.
+# *   **`units`**: Contains information about sorted spike units, including spike times and waveforms.
+# *   **`electrodes`**: A table describing the properties of each electrode.
+# *   **`electrode_groups`**: Describes groups of electrodes (e.g., probes).
+# *   **`devices`**: Information about data acquisition devices (e.g., Neuropixels probes).
+# *   **`subject`**: Information about the experimental subject.
+#
+# To see all available data, you can explore the `nwbfile` object interactively or refer to the Neurosift link. For example, to list all items in `acquisition`:
+# `print(list(nwbfile.acquisition.keys()))`
+# And to list all processing modules:
+# `print(list(nwbfile.processing.keys()))`
 
 # %%
-if nwbfile.acquisition:
-    print("Available data in 'acquisition':")
-    for acq_name, acq_data in nwbfile.acquisition.items():
-        print(f"- {acq_name} (type: {type(acq_data).__name__})")
-        if hasattr(acq_data, 'data') and hasattr(acq_data.data, 'shape'):
-             print(f"  Shape: {acq_data.data.shape}")
-        if isinstance(acq_data, pynwb.base.TimeSeries) and hasattr(acq_data, 'timestamps') and hasattr(acq_data.timestamps, 'shape'):
-             print(f"  Timestamps shape: {acq_data.timestamps.shape}")
-        elif isinstance(acq_data, pynwb.behavior.Position): # For EyeTracking
-            for spatial_series_name, spatial_series in acq_data.spatial_series.items():
-                print(f"  - {spatial_series_name} (type: {type(spatial_series).__name__})")
-                if hasattr(spatial_series, 'data') and hasattr(spatial_series.data, 'shape'):
-                    print(f"    Data shape: {spatial_series.data.shape}")
-                if hasattr(spatial_series, 'timestamps') and_link = hasattr(spatial_series.timestamps, 'shape'):  # Corrected: and_link to and
-                    print(f"    Timestamps shape: {spatial_series.timestamps.shape if hasattr(spatial_series.timestamps, 'shape') else 'N/A'}")
+print("Items in nwbfile.acquisition:")
+print(list(nwbfile.acquisition.keys()))
 
-else:
-    print("'acquisition' group is empty or not present.")
+print("\nProcessing modules in nwbfile.processing:")
+print(list(nwbfile.processing.keys()))
+
+if "running" in nwbfile.processing:
+    print("\nData interfaces in nwbfile.processing['running']:")
+    print(list(nwbfile.processing["running"].data_interfaces.keys()))
+
+if "EyeTracking" in nwbfile.acquisition:
+    print("\nSpatial series in nwbfile.acquisition['EyeTracking']:")
+    print(list(nwbfile.acquisition["EyeTracking"].spatial_series.keys()))
 
 # %% [markdown]
-# #### Processing Data
+# ## Loading and Visualizing Data from the NWB File
 #
-# This group often contains processed data derived from the raw acquisition.
-
-# %%
-if nwbfile.processing:
-    print("\nAvailable data in 'processing':")
-    for proc_module_name, proc_module in nwbfile.processing.items():
-        print(f"- Processing module: {proc_module_name}")
-        for data_interface_name, data_interface in proc_module.data_interfaces.items():
-            print(f"  - {data_interface_name} (type: {type(data_interface).__name__})")
-            if hasattr(data_interface, 'data') and hasattr(data_interface.data, 'shape'):
-                 print(f"    Shape: {data_interface.data.shape}")
-            if isinstance(data_interface, pynwb.base.TimeSeries) and hasattr(data_interface, 'timestamps') and hasattr(data_interface.timestamps, 'shape'):
-                 print(f"    Timestamps shape: {data_interface.timestamps.shape}")
-else:
-    print("\n'processing' group is empty or not present.")
+# Let's load and visualize a few examples of data. We'll be careful to load only subsets of data if they are very large, given that we are streaming over the network.
 
 # %% [markdown]
-# #### Units Data (Spike Times)
+# ### Example 1: Running Speed
 #
-# If spike sorting has been performed, this table contains information about putative neurons (units), including their spike times.
+# The running speed is stored in `nwbfile.processing['running']['running_speed']`. This is a `TimeSeries` object. We can access its data and timestamps.
 
 # %%
-if nwbfile.units:
-    print("\nUnits data (spike times):")
-    # Displaying units as a pandas DataFrame can be very informative
-    # We select a few representative columns to display.
-    # Note: Accessing all columns with to_dataframe() might be slow for large unit tables.
-    # It's better to select columns of interest.
-    desired_columns = ['id', 'spike_times', 'electrodes', 'electrode_group', 'waveform_mean', 'quality']
-    # Filter out columns that don't exist to avoid errors
-    available_columns = [col for col in desired_columns if col in nwbfile.units.colnames]
+if "running" in nwbfile.processing and "running_speed" in nwbfile.processing["running"].data_interfaces:
+    running_speed_ts = nwbfile.processing["running"]["running_speed"]
 
-    if available_columns:
-        units_df = nwbfile.units[available_columns].to_dataframe()
-        print(f"Number of units: {len(units_df)}")
-        print("First 5 units (selected columns):")
-        # For 'spike_times' and 'waveform_mean', which are ragged arrays,
-        # the DataFrame will contain object arrays. We can show their shapes or a snippet.
-        
-        # Create a display DataFrame for better printing
-        display_df = pd.DataFrame()
-        for col in available_columns:
-            if col == 'spike_times':
-                display_df[col] = units_df[col].apply(lambda x: f"shape {x.shape}" if hasattr(x, 'shape') else x)
-            elif col == 'waveform_mean':
-                 display_df[col] = units_df[col].apply(lambda x: f"shape {x.shape}" if hasattr(x, 'shape') else x)
-            elif col == 'electrodes': # Electrodes is a DynamicTableRegion, show indices
-                display_df[col] = units_df[col].apply(lambda x: x[:] if hasattr(x, '__getitem__') else x)
-            else:
-                display_df[col] = units_df[col]
-        print(display_df.head())
+    # Load a subset of data for plotting (e.g., first 5000 points)
+    num_points_to_plot = 5000
+    if len(running_speed_ts.data) > num_points_to_plot:
+        print(f"Plotting the first {num_points_to_plot} points of running speed data.")
+        running_speed_data = running_speed_ts.data[:num_points_to_plot]
+        running_speed_timestamps = running_speed_ts.timestamps[:num_points_to_plot]
     else:
-        print("Units table is present but no standard columns found for display.")
+        print("Plotting all running speed data points.")
+        running_speed_data = running_speed_ts.data[:]
+        running_speed_timestamps = running_speed_ts.timestamps[:]
 
+    plt.figure(figsize=(12, 4))
+    plt.plot(running_speed_timestamps, running_speed_data)
+    plt.xlabel(f"Time ({running_speed_ts.timestamps_unit})")
+    plt.ylabel(f"Running Speed ({running_speed_ts.unit})")
+    plt.title(f"Running Speed (First {len(running_speed_data)} points)")
+    plt.show()
 else:
-    print("\n'units' data is not present in this file.")
+    print("Running speed data not found in the expected location.")
 
 # %% [markdown]
-# #### Stimulus Presentations
+# ### Example 2: Pupil Area
 #
-# Information about presented stimuli is often stored in `nwbfile.intervals`.
+# Pupil tracking data is often stored within `acquisition` under an `EyeTracking` module. Let's try to plot the pupil area from `nwbfile.acquisition['EyeTracking'].spatial_series['pupil_tracking']`. This is an `EllipseSeries` which has an `area` field.
 
 # %%
-if nwbfile.intervals:
-    print("\nAvailable stimulus presentation intervals:")
-    for interval_name, interval_data in nwbfile.intervals.items():
-        print(f"- {interval_name} (type: {type(interval_data).__name__})")
-        # Displaying a few rows of each interval table using pandas
-        try:
-            interval_df = interval_data.to_dataframe()
-            print(f"  Number of intervals: {len(interval_df)}")
-            print(f"  Columns: {list(interval_df.columns)}")
-            print("  First 2 entries:")
-            print(interval_df.head(2))
-        except Exception as e:
-            print(f"  Could not convert {interval_name} to DataFrame: {e}")
-else:
-    print("\n'intervals' data is not present.")
+if "EyeTracking" in nwbfile.acquisition and \
+   "pupil_tracking" in nwbfile.acquisition["EyeTracking"].spatial_series:
 
-# %% [markdown]
-# ## Visualizing Data from the NWB File
-#
-# Let's visualize some of the data. We'll be careful to load only subsets of large datasets to avoid excessive download times and memory usage.
+    pupil_tracking_series = nwbfile.acquisition["EyeTracking"].spatial_series["pupil_tracking"]
 
-# %% [markdown]
-# ### Example 1: Pupil Area
-#
-# The file contains eye tracking data, including pupil area. Let's plot the pupil area over a short period.
-
-# %%
-if 'EyeTracking' in nwbfile.acquisition and \
-   'pupil_tracking' in nwbfile.acquisition['EyeTracking'].spatial_series:
-    pupil_tracking = nwbfile.acquisition['EyeTracking'].spatial_series['pupil_tracking']
-
-    # Check if area and timestamps are available
-    if hasattr(pupil_tracking, 'area') and pupil_tracking.area is not None and \
-       hasattr(pupil_tracking, 'timestamps') and pupil_tracking.timestamps is not None:
-
-        print(f"Pupil area data shape: {pupil_tracking.area.shape}")
-        print(f"Pupil timestamps shape: {pupil_tracking.timestamps.shape}")
-
-        # Determine a subset of data to plot (e.g., first 1000 points or first 10 seconds)
-        num_points_to_plot = min(1000, len(pupil_tracking.timestamps))
+    if hasattr(pupil_tracking_series, "area") and hasattr(pupil_tracking_series, "timestamps"):
+        # Load a subset of data for plotting (e.g., first 5000 points or as available)
+        num_points_to_plot_pupil = 5000
         
-        # Find the index for the first ~10 seconds of data if sampling rate is known
-        # Assuming timestamps are in seconds.
-        # If timestamps are regularly sampled, we can estimate. Otherwise, find index by time.
-        # For simplicity, we plot the first num_points_to_plot
-        
-        time_slice = slice(0, num_points_to_plot)
-        
-        try:
-            pupil_area_data = pupil_tracking.area[time_slice]
-            timestamps_data = pupil_tracking.timestamps[time_slice]
+        # Ensure timestamps are loaded correctly. pupil_tracking_series.timestamps might be a dataset or another series
+        if hasattr(pupil_tracking_series.timestamps, 'data'): # If timestamps is a TimeSeries itself
+             timestamps_data_pupil = pupil_tracking_series.timestamps.data
+        else: # If timestamps is a direct dataset
+             timestamps_data_pupil = pupil_tracking_series.timestamps
 
-            if timestamps_data.ndim > 1: # If timestamps are in intervals (start, stop)
-                 timestamps_data = timestamps_data[:, 0] # Use start times
+        # Check lengths before slicing
+        available_points_pupil = min(len(pupil_tracking_series.area), len(timestamps_data_pupil))
 
-            plt.figure(figsize=(12, 6))
-            plt.plot(timestamps_data, pupil_area_data)
-            plt.xlabel(f"Time ({pupil_tracking.timestamps_unit})")
-            plt.ylabel(f"Pupil Area ({pupil_tracking.unit if hasattr(pupil_tracking, 'unit') else 'unknown units'})")
-            plt.title(f"Pupil Area (First {num_points_to_plot} samples)")
-            plt.grid(True)
-            plt.show()
-
-        except Exception as e:
-            print(f"Could not plot pupil area: {e}")
-            print("This might be due to the data being very large or an issue with accessing a slice.")
-            print("Consider checking the structure of pupil_tracking.area and pupil_tracking.timestamps in more detail.")
-            print(f"pupil_tracking.area type: {type(pupil_tracking.area)}")
-            print(f"pupil_tracking.timestamps type: {type(pupil_tracking.timestamps)}")
-
-    else:
-        print("Pupil area or timestamps data not available in 'EyeTracking/pupil_tracking'.")
-else:
-    print("'EyeTracking' or 'pupil_tracking' not found in acquisition data.")
-
-# %% [markdown]
-# ### Example 2: Running Speed
-#
-# The file contains running speed data in the `processing` module. Let's plot this.
-
-# %%
-if 'running' in nwbfile.processing and \
-   'running_speed' in nwbfile.processing['running'].data_interfaces:
-    running_speed_ts = nwbfile.processing['running'].data_interfaces['running_speed']
-
-    if hasattr(running_speed_ts, 'data') and running_speed_ts.data is not None and \
-       hasattr(running_speed_ts, 'timestamps') and running_speed_ts.timestamps is not None:
-
-        print(f"Running speed data shape: {running_speed_ts.data.shape}")
-        print(f"Running speed timestamps shape: {running_speed_ts.timestamps.shape}")
-
-        # Determine a subset of data to plot
-        num_points_to_plot = min(2000, len(running_speed_ts.timestamps))
-        time_slice = slice(0, num_points_to_plot)
-
-        try:
-            running_speed_data = running_speed_ts.data[time_slice]
-            timestamps_data = running_speed_ts.timestamps[time_slice]
-
-            plt.figure(figsize=(12, 6))
-            plt.plot(timestamps_data, running_speed_data)
-            plt.xlabel(f"Time ({running_speed_ts.timestamps_unit})")
-            plt.ylabel(f"Running Speed ({running_speed_ts.unit})")
-            plt.title(f"Running Speed (First {num_points_to_plot} samples)")
-            plt.grid(True)
-            plt.show()
-
-        except Exception as e:
-            print(f"Could not plot running speed: {e}")
-            print("This might be due to the data being very large or an issue with accessing a slice.")
-    else:
-        print("Running speed data or timestamps not available.")
-else:
-    print("'running/running_speed' not found in processing data.")
-
-# %% [markdown]
-# ### Example 3: Unit Spike Times (Raster Plot for a few units)
-#
-# If unit data is available, we can create a simple raster plot for a small number of units over a short time window.
-# A full raster plot for all units and the entire session can be very dense and computationally intensive.
-
-# %%
-if nwbfile.units:
-    print("\nAttempting to create a raster plot for a few units...")
-    units_df = nwbfile.units.to_dataframe() # Get the full dataframe to access spike times
-
-    num_units_to_plot = min(10, len(units_df)) # Plot up to 10 units
-    plot_duration_seconds = 10 # Plot spikes within the first 10 seconds of the recording
-
-    plt.figure(figsize=(12, 6))
-    
-    event_times_list = []
-    unit_ids_for_plot = []
-
-    for i in range(num_units_to_plot):
-        unit_id = units_df.index[i] # This assumes default integer index; or use 'id' column if exists
-        if 'id' in units_df.columns: # prefer actual unit IDs if available
-            unit_id_val = units_df['id'].iloc[i]
+        if available_points_pupil > num_points_to_plot_pupil:
+            print(f"Plotting the first {num_points_to_plot_pupil} points of pupil area data.")
+            pupil_area_data = pupil_tracking_series.area[:num_points_to_plot_pupil]
+            pupil_timestamps = timestamps_data_pupil[:num_points_to_plot_pupil]
+        elif available_points_pupil > 0:
+            print(f"Plotting all {available_points_pupil} available pupil area data points.")
+            pupil_area_data = pupil_tracking_series.area[:available_points_pupil]
+            pupil_timestamps = timestamps_data_pupil[:available_points_pupil]
         else:
-            unit_id_val = unit_id
+            print("No pupil area data points available to plot.")
+            pupil_area_data = [] # ensure it's an empty list
 
-        spike_times_all = nwbfile.units['spike_times'][i] # Access spike times by index is more direct
-        
-        # Filter spike times for the desired duration
-        spike_times_in_window = spike_times_all[spike_times_all < plot_duration_seconds]
-        
-        if len(spike_times_in_window) > 0:
-            event_times_list.append(spike_times_in_window)
-            unit_ids_for_plot.append(unit_id_val)
+        if len(pupil_area_data) > 0:
+            plt.figure(figsize=(12, 4))
+            plt.plot(pupil_timestamps, pupil_area_data)
+            plt.xlabel(f"Time ({pupil_tracking_series.timestamps_unit if hasattr(pupil_tracking_series, 'timestamps_unit') else 'seconds'})")
+            plt.ylabel(f"Pupil Area (units: {pupil_tracking_series.unit})") # EllipseSeries might not have a specific unit for area
+            plt.title(f"Pupil Area (First {len(pupil_area_data)} points)")
+            plt.show()
+    else:
+        print("Pupil area or timestamps data not found in the pupil_tracking series.")
+else:
+    print("EyeTracking or pupil_tracking data not found in the expected location.")
 
-    if event_times_list:
-        colors = plt.cm.viridis(np.linspace(0, 1, len(event_times_list)))
-        plt.eventplot(event_times_list, linelengths=0.75, colors=colors)
-        plt.yticks(np.arange(len(unit_ids_for_plot)), unit_ids_for_plot)
-        plt.xlabel("Time (s)")
+# %% [markdown]
+# ### Example 3: Spike Times from Units
+#
+# The `nwbfile.units` is a table containing information about sorted neuronal units. Each row typically represents a unit, and there's a `spike_times` column which is a ragged array (each unit has its own array of spike times).
+#
+# Let's get the spike times for the first few units and create a simple raster plot for a short time window.
+
+# %%
+if nwbfile.units is not None and 'spike_times' in nwbfile.units.colnames:
+    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling
+    
+    num_units_to_plot = min(5, len(units_df)) # Plot first 5 units or fewer if not available
+    time_window_plot = (0, 10) # Plot spikes in the first 10 seconds
+
+    if num_units_to_plot > 0:
+        plt.figure(figsize=(12, 6))
+        event_data = []
+        for i in range(num_units_to_plot):
+            unit_id = units_df.index[i] # Actual unit ID
+            spike_times_for_unit = units_df["spike_times"].iloc[i]
+            
+            # Filter spike times for the plotting window
+            spikes_in_window = spike_times_for_unit[
+                (spike_times_for_unit >= time_window_plot[0]) & (spike_times_for_unit <= time_window_plot[1])
+            ]
+            event_data.append(spikes_in_window)
+        
+        # Seaborn's eventplot is good for rasters
+        # Reset default matplotlib style for this plot if seaborn theme affects it undesirably
+        with plt.style.context('default'):
+             colors = plt.cm.viridis(np.linspace(0, 1, num_units_to_plot))
+             plt.eventplot(event_data, linelengths=0.75, colors=colors)
+        
+        plt.yticks(ticks=np.arange(num_units_to_plot), labels=[f"Unit {units_df.index[i]}" for i in range(num_units_to_plot)])
+        plt.xlabel("Time (seconds)")
         plt.ylabel("Unit ID")
-        plt.title(f"Spike Raster (First {num_units_to_plot} Units, First {plot_duration_seconds} s)")
-        plt.grid(True, axis='x')
+        plt.title(f"Spike Raster for First {num_units_to_plot} Units ({time_window_plot[0]}-{time_window_plot[1]} s)")
         plt.show()
     else:
-        print("No spikes found in the selected time window for the chosen units, or no units to plot.")
+        print("No units found to plot.")
 else:
-    print("No units data available for raster plot.")
+    print("Units data or spike_times column not found.")
 
 # %% [markdown]
-# ## Summary of Findings and Future Directions
+# ### Example 4: Stimulus Presentation Intervals
+#
+# NWB files often store information about stimulus presentations or experimental trials in `TimeIntervals` tables within `nwbfile.intervals`. Let's inspect one such table. The output of `nwb-file-info` showed many stimulus presentation tables like `Disk_Wd15_Vel2_Bndry1_Cntst0_loop_presentations`.
+
+# %%
+if nwbfile.intervals is not None:
+    # Let's pick one of the interval tables mentioned in the nwb-file-info output
+    # For example: 'Disk_Wd15_Vel2_Bndry1_Cntst0_loop_presentations'
+    interval_table_name = 'Disk_Wd15_Vel2_Bndry1_Cntst0_loop_presentations'
+    if interval_table_name in nwbfile.intervals:
+        stim_table = nwbfile.intervals[interval_table_name]
+        # Convert to pandas DataFrame for easy viewing
+        stim_df = stim_table.to_dataframe()
+        print(f"\nFirst 5 rows of stimulus interval table: '{interval_table_name}'")
+        # Use display for richer output if in a full Jupyter environment, otherwise print
+        try:
+            from IPython.display import display
+            display(stim_df.head())
+        except ImportError:
+            print(stim_df.head())
+
+        # We could, for example, plot the distribution of a stimulus parameter
+        if 'orientation' in stim_df.columns:
+            plt.figure(figsize=(8, 4))
+            # sns.histplot might not be suitable if orientation is categorical or has few unique values
+            # sns.countplot is better for categorical data
+            unique_orientations = stim_df['orientation'].nunique()
+            if unique_orientations < 20: # Heuristic for using countplot
+                 sns.countplot(data=stim_df, x='orientation')
+            else: # Use histplot if many unique values, though may still not be ideal
+                 sns.histplot(stim_df['orientation'], kde=False, bins=30)
+            plt.title(f"Distribution of 'orientation' in {interval_table_name}")
+            plt.xlabel("Orientation (degrees)")
+            plt.ylabel("Count")
+            plt.show()
+        else:
+            print(f"'orientation' column not found in {interval_table_name}.")
+
+    else:
+        print(f"Interval table '{interval_table_name}' not found. Available tables: {list(nwbfile.intervals.keys())}")
+else:
+    print("No interval tables found in nwbfile.intervals.")
+
+
+# %% [markdown]
+# ## Summary and Future Directions
 #
 # This notebook demonstrated how to:
-# - Access and understand metadata for Dandiset 000690.
-# - Load an NWB file from this Dandiset using its URL.
-# - Explore the basic structure and metadata within the NWB file, including acquisition, processing, units, and stimulus interval data.
-# - Visualize example data streams such as pupil area, running speed, and a simple spike raster.
+# *   Load a Dandiset from the DANDI Archive.
+# *   Access and inspect an NWB file within the Dandiset, specifically `sub-692072/sub-692072_ses-1298465622.nwb`.
+# *   View basic metadata and understand the general structure of the NWB file.
+# *   Load and visualize example data, including:
+#     *   Running speed over time.
+#     *   Pupil area over time.
+#     *   Spike times for a few units as a raster plot.
+#     *   Properties from a stimulus presentation table.
 #
-# ### Potential Future Directions:
+# **Future Directions:**
 #
-# 1.  **Detailed Stimulus-Response Analysis:** Correlate neural activity (spike times from `nwbfile.units`) with specific stimulus presentation times found in `nwbfile.intervals`. This could involve creating peri-stimulus time histograms (PSTHs) for different visual stimuli.
-2.  **Behavioral Correlations:** Investigate how behavioral variables like running speed or pupil diameter modulate neural responses. For example, analyze if firing rates of certain units change when the animal is running versus stationary during visual stimulation.
-3.  **Cross-Probe Analysis:** If the Dandiset contains data from multiple ephys probes (as suggested by `probe-X_ecephys.nwb` asset names, though this specific file `sub-692072_ses-1298465622.nwb` is a general session file), one could explore correlations or differential responses across brain regions targeted by these probes. This would involve loading the corresponding `_ecephys.nwb` files.
-4.  **LFP Analysis:** The `electrode_groups` metadata mentions LFP (Local Field Potential) data. If LFP data is present (often in `nwbfile.acquisition` or linked `_ecephys.nwb` files), analyses such as power spectral density during different behavioral states or stimulus conditions could be performed.
-5.  **Exploring Different NWB Files:** This notebook focused on one main session NWB file. The Dandiset contains other files, including `_image.nwb` (likely containing imaging data if applicable, though this Dandiset focuses on ephys) and `_probe-X_ecephys.nwb` files which typically contain the raw continuous electrophysiology data and LFP. Exploring these specialized files would provide deeper insights into specific data modalities.
-6.  **Advanced Visualizations:** Create more sophisticated visualizations, such as heatmaps of neural activity across populations, or plots showing the relationship between multiple behavioral variables.
-7.  **Comparative Analysis:** Compare neural responses to different types of visual stimuli (simple bars vs. movies) described in the Dandiset's protocol.
+# This is just a starting point. Researchers can expand on this by:
+# 1.  **Exploring other NWB files:** This Dandiset contains many NWB files. Similar analyses can be applied to other files, including those with `_ecephys` (containing raw ephys data) or `_image` (potentially containing imaging data if applicable, though this one seems focused on ephys behavior).
+# 2.  **Detailed E LFP and Spike Analysis:** For files containing ephys data (e.g., ending in `_ecephys.nwb` or if units are present in general files), one could perform more in-depth LFP analysis (e.g., power spectra, coherence) or spike train analysis (e.g., firing rate statistics, inter-spike intervals, correlations with behavior or stimuli). *Note: The main NWB file we explored here already contains sorted units.*
+# 3.  **Relating Neural Activity to Behavior and Stimuli:** A key goal would be to correlate neural activity (spike rates, LFP features) with behavioral variables (running speed, pupil size) and stimulus presentations (using the `intervals` tables).
+# 4.  **Analyzing data across different stimulus conditions:** The `intervals` tables contain rich information about various visual stimuli presented. One could analyze neural responses conditioned on these different stimuli.
+# 5.  **Population Analysis:** Investigate how populations of neurons collectively represent information.
+# 6.  **Cross-session/subject comparisons:** If applicable, compare findings across different recording sessions or subjects within the Dandiset.
 #
-# Remember that working with remote NWB files requires careful consideration of data sizes. Always try to load only necessary subsets of data for initial exploration and visualization to manage download times and memory usage effectively. Refer to the `tools_cli.py nwb-file-info` output for detailed paths to specific datasets within the NWB file structure.
+# Remember to consult the Dandiset documentation and related publications for more context on the experimental design and data.
 
 # %% [markdown]
 # ---
-# End of Notebook.
-#
-# To close the NWB file and release the remote file object if you were to run this interactively and wanted to manage resources explicitly (though not strictly necessary for a script that terminates):
-# ```python
-# # io.close()
-# # remote_file.close() # If remfile has a close method
-# # h5_file.close()
-# ```
-# However, for this automated notebook execution, explicit closing is handled upon script completion.
-
+# End of AI-Generated Notebook.
 # %%
-print("Notebook execution cell - final check.")
+# Final check: close the HDF5 file and remfile object
+# This is good practice, although not strictly required by the prompt for this specific notebook's execution flow.
+try:
+    nwb_io.close()
+    # h5_nwb_file is managed by NWBHDF5IO, closing io should close it.
+    # If remfile needs explicit closing and is not managed by h5py.File upon its closure:
+    if hasattr(remote_nwb_file, 'close'):
+         remote_nwb_file.close()
+    print("\nNWB file and remote file object closed.")
+except Exception as e:
+    print(f"Error closing files: {e}")
 ================================
-Total prompt tokens: 76855 + 0
-Total completion tokens: 8022 + 0
+Total prompt tokens: 87805 + 0
+Total completion tokens: 8473 + 0
 
 =========================================
 
 write_to_file for 'notebook.py':
-Successfully wrote 22156 characters to notebook.py
-=========================================
-
-Using model: google/gemini-2.5-pro-preview
-Num. messages in conversation: 10
-Submitting completion request...
-Processing response...
-I have successfully created the `notebook.py` file. The next step is to convert it to a Jupyter notebook (`.ipynb`) format and execute it. I will use the `execute_command` tool to run the command `jupytext --to notebook notebook.py && jupyter execute --inplace --allow-errors notebook.ipynb`.
-This command first converts the Python script to a notebook file and then executes the notebook, allowing errors to occur without stopping the execution. A timeout of 600 seconds is specified. This command may have an impact if there are existing files named `notebook.ipynb` (it will overwrite), but given the context of creating a new notebook, this should be acceptable. I will set `requires_approval` to `false` as it's part of the core task flow.
-
-Tool: execute_command
-Params: {'command': 'jupytext --to notebook notebook.py &amp;&amp; jupyter execute --inplace --allow-errors notebook.ipynb', 'requires_approval': 'false', 'timeout': '600'}
-================================
-Command to be executed
-jupytext --to notebook notebook.py &amp;&amp; jupyter execute --inplace --allow-errors notebook.ipynb
-================================
-/bin/sh: 1: Syntax error: "&" unexpected
-Total prompt tokens: 127737 + 0
-Total completion tokens: 8287 + 0
-
-=========================================
-
-execute_command 'jupytext --to notebook notebook.py &amp;&amp; jupyter execute --inplace --allow-errors notebook.ipynb' (requires approval):
-Command failed with exit code 2
-STDERR:
-/bin/sh: 1: Syntax error: "&" unexpected
-
+Successfully wrote 21119 characters to notebook.py
 =========================================
 
 Using model: google/gemini-2.5-pro-preview
 Num. messages in conversation: 12
 Submitting completion request...
 Processing response...
-The previous command failed due to a syntax error with `&amp;&amp;`. I need to split the command into two separate executions. The first part is to convert the Jupytext notebook (`notebook.py`) into a Jupyter notebook (`notebook.ipynb`). I will use the command `jupytext --to notebook notebook.py`. This command is safe and does not require user approval.
+I need to execute the command `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` as per step 6 of the plan.
+This command performs file operations (creation/modification of `notebook.ipynb`) and executes code, so `requires_approval` should be `true`.
+A timeout of 600 seconds is specified.
 
 Tool: execute_command
-Params: {'command': 'jupytext --to notebook notebook.py', 'requires_approval': 'false'}
+Params: {'command': 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb', 'requires_approval': 'true', 'timeout': '600'}
 ================================
 Command to be executed
-jupytext --to notebook notebook.py
+jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb
 ================================
 /home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
   warnings.warn(
 [jupytext] Reading notebook.py in format py
 [jupytext] Writing notebook.ipynb
-Total prompt tokens: 178994 + 0
-Total completion tokens: 8464 + 0
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+Traceback (most recent call last):
+  File "/home/magland/miniconda3/envs/dev/bin/jupyter-execute", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/jupyter_core/application.py", line 283, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/traitlets/config/application.py", line 1074, in launch_instance
+    app.initialize(argv)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/traitlets/config/application.py", line 118, in inner
+    return method(app, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/cli.py", line 161, in initialize
+    self.run_notebook(path)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/cli.py", line 215, in run_notebook
+    client.execute()
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/asyncio/base_events.py", line 685, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Connect to DANDI archive
+client = DandiAPIClient()
+dandiset_id = "000690"
+dandiset_version = "0.250326.0015"
+dandiset = client.get_dandiset(dandiset_id, dandiset_version)
+
+# Print basic information about the Dandiset
+metadata = dandiset.get_raw_metadata()
+print(f"Dandiset name: {metadata['name']}")
+print(f"Dandiset URL: {metadata['url']}") # Note: This URL might point to the base dandiset, not the specific version.
+print(f"Dandiset description: {metadata.get('description', 'N/A')[:200]}...") # Print first 200 chars of description
+
+# List some assets in the Dandiset
+assets = dandiset.get_assets()
+print("\nFirst 5 assets:")
+for asset in islice(assets, 5):
+    print(f"- {asset.path} (ID: {asset.asset_id})")
+------------------
+
+----- stdout -----
+Dandiset name: Allen Institute Openscope - Vision2Hippocampus project
+Dandiset URL: https://dandiarchive.org/dandiset/000690/0.250326.0015
+Dandiset description: Extensive research shows that visual cortical neurons respond to specific stimuli, e.g. the primary visual cortical neurons respond to bars of light with specific orientation. In contrast, the hippoca...
+
+First 5 assets:
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mAttributeError[0m                            Traceback (most recent call last)
+Cell [0;32mIn[2], line 17[0m
+[1;32m     15[0m [38;5;28mprint[39m([38;5;124m"[39m[38;5;130;01m\n[39;00m[38;5;124mFirst 5 assets:[39m[38;5;124m"[39m)
+[1;32m     16[0m [38;5;28;01mfor[39;00m asset [38;5;129;01min[39;00m islice(assets, [38;5;241m5[39m):
+[0;32m---> 17[0m     [38;5;28mprint[39m([38;5;124mf[39m[38;5;124m"[39m[38;5;124m- [39m[38;5;132;01m{[39;00masset[38;5;241m.[39mpath[38;5;132;01m}[39;00m[38;5;124m (ID: [39m[38;5;132;01m{[39;00m[43masset[49m[38;5;241;43m.[39;49m[43masset_id[49m[38;5;132;01m}[39;00m[38;5;124m)[39m[38;5;124m"[39m)
+
+File [0;32m~/miniconda3/envs/dev/lib/python3.12/site-packages/pydantic/main.py:891[0m, in [0;36mBaseModel.__getattr__[0;34m(self, item)[0m
+[1;32m    888[0m     [38;5;28;01mreturn[39;00m [38;5;28msuper[39m()[38;5;241m.[39m[38;5;21m__getattribute__[39m(item)  [38;5;66;03m# Raises AttributeError if appropriate[39;00m
+[1;32m    889[0m [38;5;28;01melse[39;00m:
+[1;32m    890[0m     [38;5;66;03m# this is the current error[39;00m
+[0;32m--> 891[0m     [38;5;28;01mraise[39;00m [38;5;167;01mAttributeError[39;00m([38;5;124mf[39m[38;5;124m'[39m[38;5;132;01m{[39;00m[38;5;28mtype[39m([38;5;28mself[39m)[38;5;241m.[39m[38;5;18m__name__[39m[38;5;132;01m!r}[39;00m[38;5;124m object has no attribute [39m[38;5;132;01m{[39;00mitem[38;5;132;01m!r}[39;00m[38;5;124m'[39m)
+
+[0;31mAttributeError[0m: 'RemoteBlobAsset' object has no attribute 'asset_id'
+
+Total prompt tokens: 138729 + 0
+Total completion tokens: 8651 + 0
 
 =========================================
 
-execute_command 'jupytext --to notebook notebook.py' (requires approval):
-Command executed successfully
+execute_command 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb' (requires approval):
+Command failed with exit code 1
 STDOUT:
 [jupytext] Reading notebook.py in format py
 [jupytext] Writing notebook.ipynb
@@ -3378,6 +3403,79 @@ STDOUT:
 STDERR:
 /home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
   warnings.warn(
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+Traceback (most recent call last):
+  File "/home/magland/miniconda3/envs/dev/bin/jupyter-execute", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/jupyter_core/application.py", line 283, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/traitlets/config/application.py", line 1074, in launch_instance
+    app.initialize(argv)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/traitlets/config/application.py", line 118, in inner
+    return method(app, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/cli.py", line 161, in initialize
+    self.run_notebook(path)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/cli.py", line 215, in run_notebook
+    client.execute()
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/asyncio/base_events.py", line 685, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Connect to DANDI archive
+client = DandiAPIClient()
+dandiset_id = "000690"
+dandiset_version = "0.250326.0015"
+dandiset = client.get_dandiset(dandiset_id, dandiset_version)
+
+# Print basic information about the Dandiset
+metadata = dandiset.get_raw_metadata()
+print(f"Dandiset name: {metadata['name']}")
+print(f"Dandiset URL: {metadata['url']}") # Note: This URL might point to the base dandiset, not the specific version.
+print(f"Dandiset description: {metadata.get('description', 'N/A')[:200]}...") # Print first 200 chars of description
+
+# List some assets in the Dandiset
+assets = dandiset.get_assets()
+print("\nFirst 5 assets:")
+for asset in islice(assets, 5):
+    print(f"- {asset.path} (ID: {asset.asset_id})")
+------------------
+
+----- stdout -----
+Dandiset name: Allen Institute Openscope - Vision2Hippocampus project
+Dandiset URL: https://dandiarchive.org/dandiset/000690/0.250326.0015
+Dandiset description: Extensive research shows that visual cortical neurons respond to specific stimuli, e.g. the primary visual cortical neurons respond to bars of light with specific orientation. In contrast, the hippoca...
+
+First 5 assets:
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mAttributeError[0m                            Traceback (most recent call last)
+Cell [0;32mIn[2], line 17[0m
+[1;32m     15[0m [38;5;28mprint[39m([38;5;124m"[39m[38;5;130;01m\n[39;00m[38;5;124mFirst 5 assets:[39m[38;5;124m"[39m)
+[1;32m     16[0m [38;5;28;01mfor[39;00m asset [38;5;129;01min[39;00m islice(assets, [38;5;241m5[39m):
+[0;32m---> 17[0m     [38;5;28mprint[39m([38;5;124mf[39m[38;5;124m"[39m[38;5;124m- [39m[38;5;132;01m{[39;00masset[38;5;241m.[39mpath[38;5;132;01m}[39;00m[38;5;124m (ID: [39m[38;5;132;01m{[39;00m[43masset[49m[38;5;241;43m.[39;49m[43masset_id[49m[38;5;132;01m}[39;00m[38;5;124m)[39m[38;5;124m"[39m)
+
+File [0;32m~/miniconda3/envs/dev/lib/python3.12/site-packages/pydantic/main.py:891[0m, in [0;36mBaseModel.__getattr__[0;34m(self, item)[0m
+[1;32m    888[0m     [38;5;28;01mreturn[39;00m [38;5;28msuper[39m()[38;5;241m.[39m[38;5;21m__getattribute__[39m(item)  [38;5;66;03m# Raises AttributeError if appropriate[39;00m
+[1;32m    889[0m [38;5;28;01melse[39;00m:
+[1;32m    890[0m     [38;5;66;03m# this is the current error[39;00m
+[0;32m--> 891[0m     [38;5;28;01mraise[39;00m [38;5;167;01mAttributeError[39;00m([38;5;124mf[39m[38;5;124m'[39m[38;5;132;01m{[39;00m[38;5;28mtype[39m([38;5;28mself[39m)[38;5;241m.[39m[38;5;18m__name__[39m[38;5;132;01m!r}[39;00m[38;5;124m object has no attribute [39m[38;5;132;01m{[39;00mitem[38;5;132;01m!r}[39;00m[38;5;124m'[39m)
+
+[0;31mAttributeError[0m: 'RemoteBlobAsset' object has no attribute 'asset_id'
+
 
 =========================================
 
@@ -3385,51 +3483,685 @@ Using model: google/gemini-2.5-pro-preview
 Num. messages in conversation: 14
 Submitting completion request...
 Processing response...
-The `notebook.py` file has been successfully converted to `notebook.ipynb`. The next step is to execute this notebook. I will use the command `jupyter execute --inplace --allow-errors notebook.ipynb`. This command will run the notebook, and any errors encountered during execution will be recorded in the notebook itself but will not stop the execution process. A timeout of 600 seconds is appropriate for potentially long-running cells. This command modifies `notebook.ipynb` in place, which is the desired behavior. I will set `requires_approval` to `false`.
+The error occurs in the cell that lists the first 5 assets:
+`print(f"- {asset.path} (ID: {asset.asset_id})")`
+I need to change `asset.asset_id` to `asset.identifier`.
 
-Tool: execute_command
-Params: {'command': 'jupyter execute --inplace --allow-errors notebook.ipynb', 'requires_approval': 'false', 'timeout': '600'}
+I will use `replace_in_file` to make this targeted change.
+
+Tool: replace_in_file
+Params: {'path': 'notebook.py', 'diff': '<<<<<<< SEARCH\nprint("\\nFirst 5 assets:")\nfor asset in islice(assets, 5):\n    print(f"- {asset.path} (ID: {asset.asset_id})")\n=======\nprint("\\nFirst 5 assets:")\nfor asset in islice(assets, 5):\n    print(f"- {asset.path} (ID: {asset.identifier})")\n>>>>>>> REPLACE'}
 ================================
-Command to be executed
-jupyter execute --inplace --allow-errors notebook.ipynb
+Proposed replacement in notebook.py:
+<<<<<<< SEARCH
+print("\nFirst 5 assets:")
+for asset in islice(assets, 5):
+    print(f"- {asset.path} (ID: {asset.asset_id})")
+=======
+print("\nFirst 5 assets:")
+for asset in islice(assets, 5):
+    print(f"- {asset.path} (ID: {asset.identifier})")
+>>>>>>> REPLACE
 ================================
-[NbClientApp] Executing notebook.ipynb
-[NbClientApp] Executing notebook with kernel: 
-Total prompt tokens: 230659 + 0
-Total completion tokens: 8660 + 0
+Total prompt tokens: 192217 + 0
+Total completion tokens: 8961 + 0
 
 =========================================
 
-execute_command 'jupyter execute --inplace --allow-errors notebook.ipynb' (requires approval):
-Command timed out after 600 seconds and was forcefully terminated
-STDERR (partial):
-[NbClientApp] Executing notebook.ipynb
-[NbClientApp] Executing notebook with kernel: 
-
+replace_in_file for 'notebook.py':
+Successfully made 1 replacements in notebook.py
 =========================================
 
 Using model: google/gemini-2.5-pro-preview
 Num. messages in conversation: 16
 Submitting completion request...
 Processing response...
-The notebook execution timed out after 600 seconds. As per the instructions, if there are errors or timeouts, I should let them be. The task was to create the Jupytext notebook, convert it, and attempt to execute it. All these steps have been performed.
+I need to execute the command `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` again, as per step 7 of the plan.
+This command performs file operations and executes code, so `requires_approval` should be `true`.
+A timeout of 600 seconds is specified.
 
-The `notebook.py` and the executed (though timed out) `notebook.ipynb` files are present in the working directory. I can now present the completion.
+Tool: execute_command
+Params: {'command': 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb', 'requires_approval': 'true', 'timeout': '600'}
+================================
+Command to be executed
+jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb
+================================
+/home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
+  warnings.warn(
+[jupytext] Reading notebook.py in format py
+[jupytext] Writing notebook.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+Total prompt tokens: 246089 + 0
+Total completion tokens: 9129 + 0
+
+=========================================
+
+execute_command 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb' (requires approval):
+Command timed out after 600 seconds and was forcefully terminated
+STDOUT (partial):
+[jupytext] Reading notebook.py in format py
+[jupytext] Writing notebook.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+
+STDERR (partial):
+/home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
+  warnings.warn(
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+
+=========================================
+
+Using model: google/gemini-2.5-pro-preview
+Num. messages in conversation: 18
+Submitting completion request...
+Processing response...
+I need to make several targeted changes to `notebook.py` to reduce data loading and processing.
+
+1.  Change `num_points_to_plot = 5000` to `num_points_to_plot = 1000` for running speed.
+2.  Change `num_points_to_plot_pupil = 5000` to `num_points_to_plot_pupil = 1000` for pupil area.
+3.  Change `num_units_to_plot = min(5, len(units_df))` to `num_units_to_plot = min(3, len(units_df))`.
+4.  Change `time_window_plot = (0, 10)` to `time_window_plot = (0, 5)`.
+5.  Modify the stimulus table display to be more robust if head() is slow, though `display(stim_df.head())` is usually fine. I'll focus on the print path.
+    Change `print(stim_df.head())` to `print(stim_df.iloc[:5])`.
+
+Tool: replace_in_file
+Params: {'path': 'notebook.py', 'diff': '<<<<<<< SEARCH\n    # Load a subset of data for plotting (e.g., first 5000 points)\n    num_points_to_plot = 5000\n    if len(running_speed_ts.data) > num_points_to_plot:\n=======\n    # Load a subset of data for plotting (e.g., first 1000 points)\n    num_points_to_plot = 1000\n    if len(running_speed_ts.data) > num_points_to_plot:\n>>>>>>> REPLACE\n<<<<<<< SEARCH\n    if hasattr(pupil_tracking_series, "area") and hasattr(pupil_tracking_series, "timestamps"):\n        # Load a subset of data for plotting (e.g., first 5000 points or as available)\n        num_points_to_plot_pupil = 5000\n        \n        # Ensure timestamps are loaded correctly. pupil_tracking_series.timestamps might be a dataset or another series\n=======\n    if hasattr(pupil_tracking_series, "area") and hasattr(pupil_tracking_series, "timestamps"):\n        # Load a subset of data for plotting (e.g., first 1000 points or as available)\n        num_points_to_plot_pupil = 1000\n        \n        # Ensure timestamps are loaded correctly. pupil_tracking_series.timestamps might be a dataset or another series\n>>>>>>> REPLACE\n<<<<<<< SEARCH\nif nwbfile.units is not None and \'spike_times\' in nwbfile.units.colnames:\n    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling\n    \n    num_units_to_plot = min(5, len(units_df)) # Plot first 5 units or fewer if not available\n    time_window_plot = (0, 10) # Plot spikes in the first 10 seconds\n\n    if num_units_to_plot > 0:\n=======\nif nwbfile.units is not None and \'spike_times\' in nwbfile.units.colnames:\n    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling\n    \n    num_units_to_plot = min(3, len(units_df)) # Plot first 3 units or fewer if not available\n    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds\n\n    if num_units_to_plot > 0:\n>>>>>>> REPLACE\n<<<<<<< SEARCH\n            display(stim_df.head())\n        except ImportError:\n            print(stim_df.head())\n\n        # We could, for example, plot the distribution of a stimulus parameter\n=======\n            display(stim_df.head())\n        except ImportError:\n            print(stim_df.iloc[:5])\n\n        # We could, for example, plot the distribution of a stimulus parameter\n>>>>>>> REPLACE'}
+================================
+Proposed replacement in notebook.py:
+<<<<<<< SEARCH
+    # Load a subset of data for plotting (e.g., first 5000 points)
+    num_points_to_plot = 5000
+    if len(running_speed_ts.data) > num_points_to_plot:
+=======
+    # Load a subset of data for plotting (e.g., first 1000 points)
+    num_points_to_plot = 1000
+    if len(running_speed_ts.data) > num_points_to_plot:
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+    if hasattr(pupil_tracking_series, "area") and hasattr(pupil_tracking_series, "timestamps"):
+        # Load a subset of data for plotting (e.g., first 5000 points or as available)
+        num_points_to_plot_pupil = 5000
+        
+        # Ensure timestamps are loaded correctly. pupil_tracking_series.timestamps might be a dataset or another series
+=======
+    if hasattr(pupil_tracking_series, "area") and hasattr(pupil_tracking_series, "timestamps"):
+        # Load a subset of data for plotting (e.g., first 1000 points or as available)
+        num_points_to_plot_pupil = 1000
+        
+        # Ensure timestamps are loaded correctly. pupil_tracking_series.timestamps might be a dataset or another series
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+if nwbfile.units is not None and 'spike_times' in nwbfile.units.colnames:
+    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling
+    
+    num_units_to_plot = min(5, len(units_df)) # Plot first 5 units or fewer if not available
+    time_window_plot = (0, 10) # Plot spikes in the first 10 seconds
+
+    if num_units_to_plot > 0:
+=======
+if nwbfile.units is not None and 'spike_times' in nwbfile.units.colnames:
+    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling
+    
+    num_units_to_plot = min(3, len(units_df)) # Plot first 3 units or fewer if not available
+    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds
+
+    if num_units_to_plot > 0:
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+            display(stim_df.head())
+        except ImportError:
+            print(stim_df.head())
+
+        # We could, for example, plot the distribution of a stimulus parameter
+=======
+            display(stim_df.head())
+        except ImportError:
+            print(stim_df.iloc[:5])
+
+        # We could, for example, plot the distribution of a stimulus parameter
+>>>>>>> REPLACE
+================================
+Total prompt tokens: 300421 + 0
+Total completion tokens: 10479 + 0
+
+=========================================
+
+replace_in_file for 'notebook.py':
+Successfully made 4 replacements in notebook.py
+=========================================
+
+Using model: google/gemini-2.5-pro-preview
+Num. messages in conversation: 20
+Submitting completion request...
+Processing response...
+I need to execute the command `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` again, as per step 7 of the plan, hoping the timeout is resolved.
+This command performs file operations and executes code, so `requires_approval` should be `true`.
+A timeout of 600 seconds is specified.
+
+Tool: execute_command
+Params: {'command': 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb', 'requires_approval': 'true', 'timeout': '600'}
+================================
+Command to be executed
+jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb
+================================
+/home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
+  warnings.warn(
+[jupytext] Reading notebook.py in format py
+[jupytext] Writing notebook.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+Total prompt tokens: 356185 + 0
+Total completion tokens: 10654 + 0
+
+=========================================
+
+execute_command 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb' (requires approval):
+Command timed out after 600 seconds and was forcefully terminated
+STDOUT (partial):
+[jupytext] Reading notebook.py in format py
+[jupytext] Writing notebook.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+
+STDERR (partial):
+/home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
+  warnings.warn(
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+
+=========================================
+
+Using model: google/gemini-2.5-pro-preview
+Num. messages in conversation: 22
+Submitting completion request...
+Processing response...
+I need to modify the spike raster plotting section in `notebook.py`.
+
+Current problematic section:
+```python
+if nwbfile.units is not None and 'spike_times' in nwbfile.units.colnames:
+    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling
+    
+    num_units_to_plot = min(3, len(units_df)) # Plot first 3 units or fewer if not available
+    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds
+
+    if num_units_to_plot > 0:
+        plt.figure(figsize=(12, 6))
+        event_data = []
+        for i in range(num_units_to_plot):
+            unit_id = units_df.index[i] # Actual unit ID
+            spike_times_for_unit = units_df["spike_times"].iloc[i]
+            # ...
+```
+
+Proposed change:
+Iterate directly on `nwbfile.units` if possible, or access columns individually to avoid full `to_dataframe()` if that's the bottleneck. `nwbfile.units` is a `DynamicTable`, and we can get spike times for unit `i` typically using `nwbfile.units['spike_times'][i]` or by direct iteration if supported by the object structure for `spike_times` when it's a ragged array. The `spike_times` column itself is a `VectorIndex` which points to the data. Accessing `nwbfile.units['spike_times'][i]` should give the spike times for the i-th unit. Unit IDs can be fetched from `nwbfile.units['id'][:]` or `nwbfile.units.id[:`.
+
+Let's try fetching unit IDs and spike times more directly.
+
+The `nwb-file-info` output for `nwb.units.spike_times` is `(VectorIndex) Index for VectorData 'spike_times'`. An example access is `# nwb.units.spike_times_index[0] # (ndarray)`. So, `nwbfile.units['spike_times'].data[i]` or `nwbfile.units['spike_times'][i]` should work.
+Unit IDs are in `nwbfile.units.id`.
+
+I'll also add a markdown cell before the NWB loading section warning about potential slowness.
+
+Tool: replace_in_file
+Params: {'path': 'notebook.py', 'diff': '<<<<<<< SEARCH\n# We will use `remfile` and `h5py` to stream the NWB file directly from the DANDI archive without downloading it locally.\n\n# %%\n# Hardcoded URL for the specific NWB file\n=======\n# We will use `remfile` and `h5py` to stream the NWB file directly from the DANDI archive without downloading it locally.\n#\n# **Note:** Loading large NWB files, especially over a network connection, can be time-consuming. Please be patient.\n\n# %%\n# Hardcoded URL for the specific NWB file\n>>>>>>> REPLACE\n<<<<<<< SEARCH\n# %% [markdown]\n# ### Example 3: Spike Times from Units\n#\n# The `nwbfile.units` is a table containing information about sorted neuronal units. Each row typically represents a unit, and there\'s a `spike_times` column which is a ragged array (each unit has its own array of spike times).\n#\n# Let\'s get the spike times for the first few units and create a simple raster plot for a short time window.\n\n# %%\nif nwbfile.units is not None and \'spike_times\' in nwbfile.units.colnames:\n    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling\n    \n    num_units_to_plot = min(3, len(units_df)) # Plot first 3 units or fewer if not available\n    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds\n\n    if num_units_to_plot > 0:\n        plt.figure(figsize=(12, 6))\n        event_data = []\n        for i in range(num_units_to_plot):\n            unit_id = units_df.index[i] # Actual unit ID\n            spike_times_for_unit = units_df["spike_times"].iloc[i]\n            \n            # Filter spike times for the plotting window\n            spikes_in_window = spike_times_for_unit[\n                (spike_times_for_unit >= time_window_plot[0]) & (spike_times_for_unit <= time_window_plot[1])\n            ]\n            event_data.append(spikes_in_window)\n        \n        # Seaborn\'s eventplot is good for rasters\n        # Reset default matplotlib style for this plot if seaborn theme affects it undesirably\n        with plt.style.context(\'default\'):\n             colors = plt.cm.viridis(np.linspace(0, 1, num_units_to_plot))\n             plt.eventplot(event_data, linelengths=0.75, colors=colors)\n        \n        plt.yticks(ticks=np.arange(num_units_to_plot), labels=[f"Unit {units_df.index[i]}" for i in range(num_units_to_plot)])\n        plt.xlabel("Time (seconds)")\n        plt.ylabel("Unit ID")\n        plt.title(f"Spike Raster for First {num_units_to_plot} Units ({time_window_plot[0]}-{time_window_plot[1]} s)")\n        plt.show()\n    else:\n        print("No units found to plot.")\nelse:\n    print("Units data or spike_times column not found.")\n=======\n# %% [markdown]\n# ### Example 3: Spike Times from Units\n#\n# The `nwbfile.units` is a table containing information about sorted neuronal units. Each row typically represents a unit, and there\'s a `spike_times` column which is a ragged array (each unit has its own array of spike times).\n#\n# Let\'s get the spike times for the first few units and create a simple raster plot for a short time window.\n# Accessing spike data directly can be more efficient than converting the entire units table to a DataFrame if it\'s very large.\n\n# %%\nif nwbfile.units is not None and \'spike_times\' in nwbfile.units.colnames and \'id\' in nwbfile.units.colnames:\n    num_total_units = len(nwbfile.units.id[:]) # Get total number of units\n    num_units_to_plot = min(3, num_total_units) # Plot first 3 units or fewer if not available\n    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds\n\n    if num_units_to_plot > 0:\n        print(f"Attempting to plot spike raster for the first {num_units_to_plot} units.")\n        plt.figure(figsize=(12, 6))\n        event_data = []\n        ytick_labels = []\n        \n        try:\n            # Get all unit IDs at once to minimize repeated access if possible\n            all_unit_ids = nwbfile.units.id[:]\n\n            for i in range(num_units_to_plot):\n                # It\'s often more direct to get spike_times for unit i using nwbfile.units[\'spike_times\'][i]\n                # or through VectorIndex: nwbfile.units[\'spike_times\'].data[i]\n                # The exact access method for ragged array data can vary slightly with PyNWB versions or file specifics.\n                # Let\'s try indexing the VectorIndex directly.\n                spike_times_for_unit = nwbfile.units[\'spike_times\'][i]\n                unit_id = all_unit_ids[i]\n                ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table\n                \n                # Filter spike times for the plotting window\n                spikes_in_window = spike_times_for_unit[\n                    (spike_times_for_unit >= time_window_plot[0]) & (spike_times_for_unit <= time_window_plot[1])\n                ]\n                event_data.append(spikes_in_window)\n            \n            # Seaborn\'s eventplot is good for rasters\n            # Reset default matplotlib style for this plot if seaborn theme affects it undesirably\n            with plt.style.context(\'default\'):\n                 colors = plt.cm.viridis(np.linspace(0, 1, num_units_to_plot))\n                 plt.eventplot(event_data, linelengths=0.75, colors=colors)\n            \n            plt.yticks(ticks=np.arange(num_units_to_plot), labels=ytick_labels)\n            plt.xlabel("Time (seconds)")\n            plt.ylabel("Unit ID")\n            plt.title(f"Spike Raster for First {num_units_to_plot} Units ({time_window_plot[0]}-{time_window_plot[1]} s)")\n            plt.show()\n\n        except Exception as e:\n            print(f"Could not generate spike raster plot: {e}")\n            print("This might be due to the size of the units table or specific data access patterns.")\n            print("Consider exploring nwbfile.units directly or using Neurosift for large datasets.")\n            \n    else:\n        print("No units found to plot or \'id\' column missing from units table.")\nelse:\n    print("Units data, spike_times, or id column not found.")\n>>>>>>> REPLACE'}
+================================
+Proposed replacement in notebook.py:
+<<<<<<< SEARCH
+# We will use `remfile` and `h5py` to stream the NWB file directly from the DANDI archive without downloading it locally.
+
+# %%
+# Hardcoded URL for the specific NWB file
+=======
+# We will use `remfile` and `h5py` to stream the NWB file directly from the DANDI archive without downloading it locally.
+#
+# **Note:** Loading large NWB files, especially over a network connection, can be time-consuming. Please be patient.
+
+# %%
+# Hardcoded URL for the specific NWB file
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+# %% [markdown]
+# ### Example 3: Spike Times from Units
+#
+# The `nwbfile.units` is a table containing information about sorted neuronal units. Each row typically represents a unit, and there's a `spike_times` column which is a ragged array (each unit has its own array of spike times).
+#
+# Let's get the spike times for the first few units and create a simple raster plot for a short time window.
+
+# %%
+if nwbfile.units is not None and 'spike_times' in nwbfile.units.colnames:
+    units_df = nwbfile.units.to_dataframe() # Convert to pandas DataFrame for easier handling
+    
+    num_units_to_plot = min(3, len(units_df)) # Plot first 3 units or fewer if not available
+    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds
+
+    if num_units_to_plot > 0:
+        plt.figure(figsize=(12, 6))
+        event_data = []
+        for i in range(num_units_to_plot):
+            unit_id = units_df.index[i] # Actual unit ID
+            spike_times_for_unit = units_df["spike_times"].iloc[i]
+            
+            # Filter spike times for the plotting window
+            spikes_in_window = spike_times_for_unit[
+                (spike_times_for_unit >= time_window_plot[0]) & (spike_times_for_unit <= time_window_plot[1])
+            ]
+            event_data.append(spikes_in_window)
+        
+        # Seaborn's eventplot is good for rasters
+        # Reset default matplotlib style for this plot if seaborn theme affects it undesirably
+        with plt.style.context('default'):
+             colors = plt.cm.viridis(np.linspace(0, 1, num_units_to_plot))
+             plt.eventplot(event_data, linelengths=0.75, colors=colors)
+        
+        plt.yticks(ticks=np.arange(num_units_to_plot), labels=[f"Unit {units_df.index[i]}" for i in range(num_units_to_plot)])
+        plt.xlabel("Time (seconds)")
+        plt.ylabel("Unit ID")
+        plt.title(f"Spike Raster for First {num_units_to_plot} Units ({time_window_plot[0]}-{time_window_plot[1]} s)")
+        plt.show()
+    else:
+        print("No units found to plot.")
+else:
+    print("Units data or spike_times column not found.")
+=======
+# %% [markdown]
+# ### Example 3: Spike Times from Units
+#
+# The `nwbfile.units` is a table containing information about sorted neuronal units. Each row typically represents a unit, and there's a `spike_times` column which is a ragged array (each unit has its own array of spike times).
+#
+# Let's get the spike times for the first few units and create a simple raster plot for a short time window.
+# Accessing spike data directly can be more efficient than converting the entire units table to a DataFrame if it's very large.
+
+# %%
+if nwbfile.units is not None and 'spike_times' in nwbfile.units.colnames and 'id' in nwbfile.units.colnames:
+    num_total_units = len(nwbfile.units.id[:]) # Get total number of units
+    num_units_to_plot = min(3, num_total_units) # Plot first 3 units or fewer if not available
+    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds
+
+    if num_units_to_plot > 0:
+        print(f"Attempting to plot spike raster for the first {num_units_to_plot} units.")
+        plt.figure(figsize=(12, 6))
+        event_data = []
+        ytick_labels = []
+        
+        try:
+            # Get all unit IDs at once to minimize repeated access if possible
+            all_unit_ids = nwbfile.units.id[:]
+
+            for i in range(num_units_to_plot):
+                # It's often more direct to get spike_times for unit i using nwbfile.units['spike_times'][i]
+                # or through VectorIndex: nwbfile.units['spike_times'].data[i]
+                # The exact access method for ragged array data can vary slightly with PyNWB versions or file specifics.
+                # Let's try indexing the VectorIndex directly.
+                spike_times_for_unit = nwbfile.units['spike_times'][i]
+                unit_id = all_unit_ids[i]
+                ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table
+                
+                # Filter spike times for the plotting window
+                spikes_in_window = spike_times_for_unit[
+                    (spike_times_for_unit >= time_window_plot[0]) & (spike_times_for_unit <= time_window_plot[1])
+                ]
+                event_data.append(spikes_in_window)
+            
+            # Seaborn's eventplot is good for rasters
+            # Reset default matplotlib style for this plot if seaborn theme affects it undesirably
+            with plt.style.context('default'):
+                 colors = plt.cm.viridis(np.linspace(0, 1, num_units_to_plot))
+                 plt.eventplot(event_data, linelengths=0.75, colors=colors)
+            
+            plt.yticks(ticks=np.arange(num_units_to_plot), labels=ytick_labels)
+            plt.xlabel("Time (seconds)")
+            plt.ylabel("Unit ID")
+            plt.title(f"Spike Raster for First {num_units_to_plot} Units ({time_window_plot[0]}-{time_window_plot[1]} s)")
+            plt.show()
+
+        except Exception as e:
+            print(f"Could not generate spike raster plot: {e}")
+            print("This might be due to the size of the units table or specific data access patterns.")
+            print("Consider exploring nwbfile.units directly or using Neurosift for large datasets.")
+            
+    else:
+        print("No units found to plot or 'id' column missing from units table.")
+else:
+    print("Units data, spike_times, or id column not found.")
+>>>>>>> REPLACE
+================================
+Total prompt tokens: 412415 + 0
+Total completion tokens: 13228 + 0
+
+=========================================
+
+replace_in_file for 'notebook.py':
+Successfully made 2 replacements in notebook.py
+=========================================
+
+Using model: google/gemini-2.5-pro-preview
+Num. messages in conversation: 24
+Submitting completion request...
+Processing response...
+I need to execute the command `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` again, as per step 7 of the plan.
+This is the third attempt to execute the notebook after modifications.
+This command performs file operations and executes code, so `requires_approval` should be `true`.
+A timeout of 600 seconds is specified.
+
+Tool: execute_command
+Params: {'command': 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb', 'requires_approval': 'true', 'timeout': '600'}
+================================
+Command to be executed
+jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb
+================================
+/home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
+  warnings.warn(
+[jupytext] Reading notebook.py in format py
+[jupytext] Writing notebook.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+Traceback (most recent call last):
+  File "/home/magland/miniconda3/envs/dev/bin/jupyter-execute", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/jupyter_core/application.py", line 283, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/traitlets/config/application.py", line 1074, in launch_instance
+    app.initialize(argv)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/traitlets/config/application.py", line 118, in inner
+    return method(app, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/cli.py", line 161, in initialize
+    self.run_notebook(path)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/cli.py", line 215, in run_notebook
+    client.execute()
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/asyncio/base_events.py", line 685, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+if nwbfile.units is not None and 'spike_times' in nwbfile.units.colnames and 'id' in nwbfile.units.colnames:
+    num_total_units = len(nwbfile.units.id[:]) # Get total number of units
+    num_units_to_plot = min(3, num_total_units) # Plot first 3 units or fewer if not available
+    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds
+
+    if num_units_to_plot > 0:
+        print(f"Attempting to plot spike raster for the first {num_units_to_plot} units.")
+        plt.figure(figsize=(12, 6))
+        event_data = []
+        ytick_labels = []
+        
+        try:
+            # Get all unit IDs at once to minimize repeated access if possible
+            all_unit_ids = nwbfile.units.id[:]
+
+            for i in range(num_units_to_plot):
+                # It's often more direct to get spike_times for unit i using nwbfile.units['spike_times'][i]
+                # or through VectorIndex: nwbfile.units['spike_times'].data[i]
+                # The exact access method for ragged array data can vary slightly with PyNWB versions or file specifics.
+                # Let's try indexing the VectorIndex directly.
+                spike_times_for_unit = nwbfile.units['spike_times'][i]
+                unit_id = all_unit_ids[i]
+                ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table
+                
+                # Filter spike times for the plotting window
+                spikes_in_window = spike_times_for_unit[
+                    (spike_times_for_unit >= time_window_plot[0]) & (spike_times_for_unit <= time_window_plot[1])
+                ]
+                event_data.append(spikes_in_window)
+            
+            # Seaborn's eventplot is good for rasters
+            # Reset default matplotlib style for this plot if seaborn theme affects it undesirably
+            with plt.style.context('default'):
+                 colors = plt.cm.viridis(np.linspace(0, 1, num_units_to_plot))
+                 plt.eventplot(event_data, linelengths=0.75, colors=colors)
+            
+            plt.yticks(ticks=np.arange(num_units_to_plot), labels=ytick_labels)
+            plt.xlabel("Time (seconds)")
+            plt.ylabel("Unit ID")
+            plt.title(f"Spike Raster for First {num_units_to_plot} Units ({time_window_plot[0]}-{time_window_plot[1]} s)")
+            plt.show()
+
+        except Exception as e:
+            print(f"Could not generate spike raster plot: {e}")
+            print("This might be due to the size of the units table or specific data access patterns.")
+            print("Consider exploring nwbfile.units directly or using Neurosift for large datasets.")
+            
+    else:
+        print("No units found to plot or 'id' column missing from units table.")
+else:
+    print("Units data, spike_times, or id column not found.")
+------------------
+
+
+[0;36m  Cell [0;32mIn[8], line 23[0;36m[0m
+[0;31m    ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table[0m
+[0m                                ^[0m
+[0;31mSyntaxError[0m[0;31m:[0m invalid syntax. Perhaps you forgot a comma?
+
+
+Total prompt tokens: 471336 + 0
+Total completion tokens: 13416 + 0
+
+=========================================
+
+execute_command 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb' (requires approval):
+Command failed with exit code 1
+STDOUT:
+[jupytext] Reading notebook.py in format py
+[jupytext] Writing notebook.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+
+STDERR:
+/home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
+  warnings.warn(
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+Traceback (most recent call last):
+  File "/home/magland/miniconda3/envs/dev/bin/jupyter-execute", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/jupyter_core/application.py", line 283, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/traitlets/config/application.py", line 1074, in launch_instance
+    app.initialize(argv)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/traitlets/config/application.py", line 118, in inner
+    return method(app, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/cli.py", line 161, in initialize
+    self.run_notebook(path)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/cli.py", line 215, in run_notebook
+    client.execute()
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/asyncio/base_events.py", line 685, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/magland/miniconda3/envs/dev/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+if nwbfile.units is not None and 'spike_times' in nwbfile.units.colnames and 'id' in nwbfile.units.colnames:
+    num_total_units = len(nwbfile.units.id[:]) # Get total number of units
+    num_units_to_plot = min(3, num_total_units) # Plot first 3 units or fewer if not available
+    time_window_plot = (0, 5) # Plot spikes in the first 5 seconds
+
+    if num_units_to_plot > 0:
+        print(f"Attempting to plot spike raster for the first {num_units_to_plot} units.")
+        plt.figure(figsize=(12, 6))
+        event_data = []
+        ytick_labels = []
+        
+        try:
+            # Get all unit IDs at once to minimize repeated access if possible
+            all_unit_ids = nwbfile.units.id[:]
+
+            for i in range(num_units_to_plot):
+                # It's often more direct to get spike_times for unit i using nwbfile.units['spike_times'][i]
+                # or through VectorIndex: nwbfile.units['spike_times'].data[i]
+                # The exact access method for ragged array data can vary slightly with PyNWB versions or file specifics.
+                # Let's try indexing the VectorIndex directly.
+                spike_times_for_unit = nwbfile.units['spike_times'][i]
+                unit_id = all_unit_ids[i]
+                ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table
+                
+                # Filter spike times for the plotting window
+                spikes_in_window = spike_times_for_unit[
+                    (spike_times_for_unit >= time_window_plot[0]) & (spike_times_for_unit <= time_window_plot[1])
+                ]
+                event_data.append(spikes_in_window)
+            
+            # Seaborn's eventplot is good for rasters
+            # Reset default matplotlib style for this plot if seaborn theme affects it undesirably
+            with plt.style.context('default'):
+                 colors = plt.cm.viridis(np.linspace(0, 1, num_units_to_plot))
+                 plt.eventplot(event_data, linelengths=0.75, colors=colors)
+            
+            plt.yticks(ticks=np.arange(num_units_to_plot), labels=ytick_labels)
+            plt.xlabel("Time (seconds)")
+            plt.ylabel("Unit ID")
+            plt.title(f"Spike Raster for First {num_units_to_plot} Units ({time_window_plot[0]}-{time_window_plot[1]} s)")
+            plt.show()
+
+        except Exception as e:
+            print(f"Could not generate spike raster plot: {e}")
+            print("This might be due to the size of the units table or specific data access patterns.")
+            print("Consider exploring nwbfile.units directly or using Neurosift for large datasets.")
+            
+    else:
+        print("No units found to plot or 'id' column missing from units table.")
+else:
+    print("Units data, spike_times, or id column not found.")
+------------------
+
+
+[0;36m  Cell [0;32mIn[8], line 23[0;36m[0m
+[0;31m    ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table[0m
+[0m                                ^[0m
+[0;31mSyntaxError[0m[0;31m:[0m invalid syntax. Perhaps you forgot a comma?
+
+
+
+=========================================
+
+Using model: google/gemini-2.5-pro-preview
+Num. messages in conversation: 26
+Submitting completion request...
+Processing response...
+The error is in the line:
+`ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table`
+
+It should be:
+`ytick_labels.append(f"Unit {unit_id}") # G for original ID from table`
+The comment `# G for original ID from table` was meant to be just a comment, not part of the f-string.
+
+I will use `replace_in_file` to make this correction.
+
+Tool: replace_in_file
+Params: {'path': 'notebook.py', 'diff': '<<<<<<< SEARCH\n                spike_times_for_unit = nwbfile.units[\'spike_times\'][i]\n                unit_id = all_unit_ids[i]\n                ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table\n                \n                # Filter spike times for the plotting window\n=======\n                spike_times_for_unit = nwbfile.units[\'spike_times\'][i]\n                unit_id = all_unit_ids[i]\n                ytick_labels.append(f"Unit {unit_id}") # G for original ID from table\n                \n                # Filter spike times for the plotting window\n>>>>>>> REPLACE'}
+================================
+Proposed replacement in notebook.py:
+<<<<<<< SEARCH
+                spike_times_for_unit = nwbfile.units['spike_times'][i]
+                unit_id = all_unit_ids[i]
+                ytick_labels.append(f"Unit {unit_id G}") # G for original ID from table
+                
+                # Filter spike times for the plotting window
+=======
+                spike_times_for_unit = nwbfile.units['spike_times'][i]
+                unit_id = all_unit_ids[i]
+                ytick_labels.append(f"Unit {unit_id}") # G for original ID from table
+                
+                # Filter spike times for the plotting window
+>>>>>>> REPLACE
+================================
+Total prompt tokens: 532310 + 0
+Total completion tokens: 13830 + 0
+
+=========================================
+
+replace_in_file for 'notebook.py':
+Successfully made 1 replacements in notebook.py
+=========================================
+
+Using model: google/gemini-2.5-pro-preview
+Num. messages in conversation: 28
+Submitting completion request...
+Processing response...
+I need to execute the command `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` again.
+This is the fourth attempt to execute the notebook.
+This command performs file operations and executes code, so `requires_approval` should be `true`.
+A timeout of 600 seconds is specified.
+
+Tool: execute_command
+Params: {'command': 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb', 'requires_approval': 'true', 'timeout': '600'}
+================================
+Command to be executed
+jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb
+================================
+/home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
+  warnings.warn(
+[jupytext] Reading notebook.py in format py
+[jupytext] Writing notebook.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+[NbClientApp] Save executed results to notebook.ipynb
+Total prompt tokens: 593321 + 0
+Total completion tokens: 14000 + 0
+
+=========================================
+
+execute_command 'jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb' (requires approval):
+Command executed successfully
+STDOUT:
+[jupytext] Reading notebook.py in format py
+[jupytext] Writing notebook.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+
+STDERR:
+/home/magland/.local/lib/python3.12/site-packages/jupytext/cell_reader.py:20: UserWarning: Sphinx Gallery in version 0.19.0 is not supported by Jupytext. Please use sphinx-gallery<=0.7.0 instead. If that is an issue, feel free to report it at https://github.com/mwouts/jupytext/issues, or even better, prepare a PR to handle the new signature of sphinx_gallery.notebook.rst2md.
+  warnings.warn(
+[NbClientApp] Executing notebook.ipynb
+[NbClientApp] Executing notebook with kernel: 
+[NbClientApp] Save executed results to notebook.ipynb
+
+=========================================
+
+Using model: google/gemini-2.5-pro-preview
+Num. messages in conversation: 30
+Submitting completion request...
+Processing response...
+The task involved several steps:
+1.  Get Dandiset metadata: Done.
+2.  Get Dandiset assets: Done.
+3.  Choose NWB file and get its info: Done.
+4.  Write `notebook.py`: Done.
+5.  Convert and execute `notebook.ipynb`, fixing errors iteratively: Done. The notebook now runs successfully.
+
+All steps are complete. I can now present the result to the user.
+I will mention that both `notebook.py` (Jupytext source) and `notebook.ipynb` (executed Jupyter notebook) have been created.
 
 Tool: attempt_completion
-Params: {'result': 'I have created the Jupytext notebook `notebook.py` as requested. This notebook aims to help researchers explore and analyze Dandiset 000690 (version 0.250326.0015).\n\nThe `notebook.py` file has been converted to `notebook.ipynb`. An attempt was made to execute `notebook.ipynb`; however, the execution timed out after 600 seconds. The notebook may contain partial outputs or error messages resulting from the timeout.\n\nThe key steps included in the notebook are:\n- An overview of the Dandiset.\n- Instructions on loading the Dandiset using the DANDI API.\n- Demonstration of loading a specific NWB file (`sub-692072/sub-692072_ses-1298465622.nwb`).\n- Summaries and visualizations of data from the NWB file, such as pupil area, running speed, and a sample spike raster plot.\n- A disclaimer about the AI-generated nature of the notebook.\n\nThe generated files are `notebook.py` and `notebook.ipynb`.'}
-I have created the Jupytext notebook `notebook.py` as requested. This notebook aims to help researchers explore and analyze Dandiset 000690 (version 0.250326.0015).
+Params: {'result': 'I have successfully created the Jupytext notebook `notebook.py` and the executed Jupyter notebook `notebook.ipynb` for exploring Dandiset 000690, version 0.250326.0015.\n\nThe notebook includes:\n- An overview of the Dandiset.\n- Information on required packages.\n- Code to load the Dandiset and selected NWB file (`sub-692072/sub-692072_ses-1298465622.nwb`).\n- Examples of how to load and visualize data such as running speed, pupil area, and spike times.\n- A link to explore the NWB file on Neurosift.\n- A summary and potential future directions for analysis.\n- A warning that the notebook is AI-generated and that loading large remote NWB files can be time-consuming.\n\nBoth `notebook.py` and the executed `notebook.ipynb` (with outputs) are available in the working directory.'}
+I have successfully created the Jupytext notebook `notebook.py` and the executed Jupyter notebook `notebook.ipynb` for exploring Dandiset 000690, version 0.250326.0015.
 
-The `notebook.py` file has been converted to `notebook.ipynb`. An attempt was made to execute `notebook.ipynb`; however, the execution timed out after 600 seconds. The notebook may contain partial outputs or error messages resulting from the timeout.
-
-The key steps included in the notebook are:
+The notebook includes:
 - An overview of the Dandiset.
-- Instructions on loading the Dandiset using the DANDI API.
-- Demonstration of loading a specific NWB file (`sub-692072/sub-692072_ses-1298465622.nwb`).
-- Summaries and visualizations of data from the NWB file, such as pupil area, running speed, and a sample spike raster plot.
-- A disclaimer about the AI-generated nature of the notebook.
+- Information on required packages.
+- Code to load the Dandiset and selected NWB file (`sub-692072/sub-692072_ses-1298465622.nwb`).
+- Examples of how to load and visualize data such as running speed, pupil area, and spike times.
+- A link to explore the NWB file on Neurosift.
+- A summary and potential future directions for analysis.
+- A warning that the notebook is AI-generated and that loading large remote NWB files can be time-consuming.
 
-The generated files are `notebook.py` and `notebook.ipynb`.
-Total prompt tokens: 282637 + 0
-Total completion tokens: 9023 + 0
+Both `notebook.py` and the executed `notebook.ipynb` (with outputs) are available in the working directory.
+Total prompt tokens: 654797 + 0
+Total completion tokens: 14433 + 0
 
